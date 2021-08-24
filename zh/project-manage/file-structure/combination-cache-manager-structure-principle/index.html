@@ -1,0 +1,1992 @@
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="generator" content="Hugo 0.82.0" /><META NAME="ROBOTS" CONTENT="INDEX, FOLLOW">
+
+
+<link rel="shortcut icon" href="/favicons/favicon.ico" >
+<link rel="apple-touch-icon" href="/favicons/apple-touch-icon-180x180.png" sizes="180x180">
+<link rel="icon" type="image/png" href="/favicons/favicon-16x16.png" sizes="16x16">
+<link rel="icon" type="image/png" href="/favicons/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/favicons/android-36x36.png" sizes="36x36">
+<link rel="icon" type="image/png" href="/favicons/android-48x48.png" sizes="48x48">
+<link rel="icon" type="image/png" href="/favicons/android-72x72.png" sizes="72x72">
+<link rel="icon" type="image/png" href="/favicons/android-96x96.png" sizes="96x96">
+<link rel="icon" type="image/png" href="/favicons/android-144x144.png" sizes="144x144">
+<link rel="icon" type="image/png" href="/favicons/android-192x192.png" sizes="192x192">
+
+<title>Combination &amp; Cache 架構設計準則(2019) | Laravel 菜雞修煉場</title><meta property="og:title" content="Combination &amp; Cache 架構設計準則(2019)" />
+<meta property="og:description" content="Combination &amp; Cache 架構設計準則(2019)" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://laravel-for-newbie.kejyun.com/zh/project-manage/file-structure/combination-cache-manager-structure-principle/" /><meta property="og:image" content="https://laravel-for-newbie.kejyun.com/images/featured-background.jpeg"/><meta property="article:section" content="project-manage" />
+<meta property="article:published_time" content="2021-05-18T08:50:29&#43;08:00" />
+<meta property="article:modified_time" content="2021-05-18T08:50:29&#43;08:00" /><meta property="og:site_name" content="Laravel 菜雞修煉場" />
+
+<meta itemprop="name" content="Combination &amp; Cache 架構設計準則(2019)">
+<meta itemprop="description" content="Combination &amp; Cache 架構設計準則(2019)"><meta itemprop="datePublished" content="2021-05-18T08:50:29&#43;08:00" />
+<meta itemprop="dateModified" content="2021-05-18T08:50:29&#43;08:00" />
+<meta itemprop="wordCount" content="1256"><meta itemprop="image" content="https://laravel-for-newbie.kejyun.com/images/featured-background.jpeg"/>
+<meta itemprop="keywords" content="Laravel,教學文件,新手教學,專案管理,檔案架構," /><meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://laravel-for-newbie.kejyun.com/images/featured-background.jpeg"/>
+
+<meta name="twitter:title" content="Combination &amp; Cache 架構設計準則(2019)"/>
+<meta name="twitter:description" content="Combination &amp; Cache 架構設計準則(2019)"/>
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'G-RZQ2D0XJX3', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+
+
+
+
+
+<link rel="preload" href="/scss/main.min.f4855cdacbb94455142c1d4f3ea1556e6d2ee3f4ec5ab054bc8c02bfb32b4e97.css" as="style">
+<link href="/scss/main.min.f4855cdacbb94455142c1d4f3ea1556e6d2ee3f4ec5ab054bc8c02bfb32b4e97.css" rel="stylesheet" integrity="">
+
+
+<script
+  src="https://code.jquery.com/jquery-3.5.1.min.js"
+  integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0="
+  crossorigin="anonymous"></script>
+
+<script
+  src="https://unpkg.com/lunr@2.3.8/lunr.min.js"
+  integrity="sha384-vRQ9bDyE0Wnu+lMfm57BlYLO0/XauFuKpVsZPs7KEDwYKktWi5+Kz3MP8++DFlRY"
+  crossorigin="anonymous"></script>
+
+
+
+
+
+
+
+
+  
+    
+
+<script type="application/ld+json">
+{
+    "@context":"http://schema.org",
+    "@type":"Article",
+    "headline":"Combination \u0026 Cache 架構設計準則(2019)",
+    "url":"https:\/\/laravel-for-newbie.kejyun.com\/zh\/project-manage\/file-structure\/combination-cache-manager-structure-principle\/",
+    "keywords":[
+    
+        
+          
+          "Laravel"
+        
+          , 
+          "教學文件"
+        
+          , 
+          "新手教學"
+        
+          , 
+          "專案管理"
+        
+          , 
+          "檔案架構"
+        
+    
+    ],
+    "image":{
+        "@type":"ImageObject",
+        "url" :
+        
+          "https:\/\/laravel-for-newbie.kejyun.com\/images\/featured-background.png",
+        
+        "width":"1200",
+        "height":"627"
+    },
+    "mainEntityOfPage":"True",
+    "publisher":{
+        "@type":"Organization",
+        "name":"KJ",
+        "url":"https:\/\/laravel-for-newbie.kejyun.com\/",
+        "logo":{
+            "@type":"ImageObject",
+            "url":"https:\/\/laravel-for-newbie.kejyun.com\/images\/featured-background.png",
+            "width":"357",
+            "height":"60"
+        }
+    },
+    "dateCreated":"2021-05-18T08:50:29\u002b08:00",
+    "datePublished":"2021-05-18T08:50:29\u002b08:00",
+    
+    
+    "author":"KeJyun",
+    "creator":"KeJyun",
+    
+    "dateModified":"2021-05-18T08:50:29\u002b08:00",
+    "articleSection":"TechArticle"
+}
+</script>
+
+  
+
+  
+    
+<script type="application/ld+json">
+	{
+		"@context":"http://schema.org",
+		"@type": "BlogPosting",
+		"image":
+		
+			"https:\/\/laravel-for-newbie.kejyun.com\/images\/featured-background.png",
+		
+		"url": "https:\/\/laravel-for-newbie.kejyun.com\/zh\/project-manage\/file-structure\/combination-cache-manager-structure-principle\/",
+		"headline": "Combination \u0026 Cache 架構設計準則(2019)",
+		"alternativeHeadline": "Combination \u0026 Cache 架構設計準則(2019)",
+		"dateCreated": "2021-05-18T08:50:29\u002b08:00",
+		"datePublished": "2021-05-18T08:50:29\u002b08:00",
+		"dateModified": "2021-05-18T08:50:29\u002b08:00",
+		"inLanguage": "zh",
+		"isFamilyFriendly": "true",
+		"copyrightYear": "2021",
+		"copyrightHolder": "KJ",
+		"contentLocation": {
+			"@type": "Place",
+			"name": "Taipei City"
+		},
+		
+		"accountablePerson": {
+			"@type": "Person",
+			"name": "KeJyun",
+			"url": "https:\/\/laravel-for-newbie.kejyun.com\/"
+		},
+		"author": {
+			"@type": "Person",
+			"name": "KeJyun",
+			"url": "https:\/\/laravel-for-newbie.kejyun.com\/"
+		},
+		"creator": {
+			"@type": "Person",
+			"name": "KeJyun",
+			"url": "https:\/\/laravel-for-newbie.kejyun.com\/"
+		},
+		
+		"publisher": {
+			"@type": "Organization",
+			"name": "KJ",
+			"url": "https:\/\/laravel-for-newbie.kejyun.com\/",
+			"logo": {
+				"@type": "ImageObject",
+				"url": "https:\/\/laravel-for-newbie.kejyun.com\/images\/featured-background.png",
+				"width":"357",
+				"height":"60"
+			}
+		},
+		"mainEntityOfPage": "True",
+		"keywords": [ 
+			"Laravel", "教學文件", "新手教學", "專案管理", "檔案架構"
+		
+		],
+		"genre":["KJ"],
+		"articleSection": "KJ",
+		"articleBody": "傳統的 MVC（Model, View, Controller） 框架，當 Controller 收到請求之後，我們會在 Controller 內直接透過 Model 去撈取資料庫的資料，並在 Controller 做資料驗證、資料整合、快取、商業邏輯判斷\u0026hellip;等等的工作。\n當系統越來越大，會發現很多類似的商業邏輯的程式都散在各地，沒有辦法重複再利用，當程式需要異動或修改的時候，就要去搜尋所有程式碼，把許多相同商業邏輯的程式碼去做異動，但需要修改的地方若太多，往往會東漏西漏，導致系統出現錯誤，並造成往後開發的時間成本增加。\n所以我們會想要做到 減少重複的程式碼、提高維護開發的效率，所以將程式碼依照分類及分層抽出獨立控管，讓不同類型的程式專心處理自己相關的商業邏輯，讓開發維護更容易。\n隨著程式架構的演進會發展出更多不同的架構，所以這個設計架構準則也是會隨著時間做演進的。\n\r資料處理邏輯分層 架構圖 架構說明 A. 資料控制結構 * Controller (控制器：控制資料流程)\r* ServiceManager (服務整合管理：組合管理不同 Service 的商業邏輯)\r* Service (服務：處理商業邏輯)\r* Repository (資源庫：資料表資料撈取邏輯)\r* Model (資料庫模型：資料表設定)\r* Presenter (資料呈現：資料表資料格式呈現轉換)\r* Combination（資料整合：整理 Repository 資料成資訊）\r* CombinationManager（複合資料整合管理：整理多個 Service 的資料成資訊）\r* Checker (檢查器：根據 Controller 所需商業邏輯，驗證不同資料表欄位資料)\r* Validator (驗證器：資料表欄位資料驗證)\r   結構名稱 說明     Controller (控制器) 控制資料流程，控制要使用哪些 Service 或 ServiceManager 的商業邏輯，去組合出使用者請求需要的資料，並做資料的資料交易控制 (transaction) ，並使用 Checker 去檢查任何使用者傳進來的資料，確保資料的正確性   ServiceManager (服務整合管理) 協助 Controller 組合不同 Service 的資料成商業邏輯   Service (服務) 處理商業邏輯，組合不同的 Repository 資料成商業邏輯，提供 Controller 或 ServiceManager 存取   Repository (資源庫) 資料表資料撈取邏輯，撈取屬於自己 Model 不同條件下的資料，提供 Service 存取   Model (資料庫模型) 資料庫模型，資料表存取相關設定   Presenter (資料呈現) 資料呈現，協助 Model 做資料呈現轉換   Checker (檢查器) 協助 Controller 做資料驗證，在資料進入到程式邏輯前，都需要經過 Checker 將資料格式做驗證   Validator (驗證器) 協助 Checker 做資料驗證，Validator 只能驗證單一 Model 資料   CombinationManager (複合資料整合管理) 協助整理不同 Service 的複合式資料，若有資料的邏輯判斷需要不同的資料來源，則由 CombinationManager 負責整合處理   Combination （資料整合） 協助整理 Repository 資料成資訊    B.獨立結構 * CacheManager (快取：管理資源快取鍵值及清除快取)\r* Constant (常數：定義資料狀態名稱)\r* Support (支援：協助處理獨立邏輯資料處理)\r* ExceptionCode (例外代碼：例外錯誤代碼定義)\r   結構名稱 說明     CacheManager (快取) 協助專案資料做快取資料的控制，可以在任何程式邏輯複雜的地方做快取存取控制，並統一清除快取   Constant (常數) 定義並命名所有資料狀態，確保資料值做異動時，不會影響程式邏輯   Support (支援) 協助處理獨立程式邏輯，邏輯沒有被其他任何的函式綁定，可以獨立完成   ExceptionCode (例外代碼) 定義例外代碼，可以統一管控當例外發生錯誤時，回傳的錯誤代碼    \r架構存取限制  不能跨 2 階層以上存取  Controller 不能存取 Repository Controller 不能存取 Validator Service 不能存取 Model   低階層的不能存取高階層的資料  Model 不能存取 Repository Repository 不能存取 Service Validator 不能存取 Checker   同一個資料類型，不能互相呼叫  避免同一類型類別呼叫，造成 new 物件的時候有無窮迴圈  PostService 存取 UserService，UserService 存取 PostsService 造成無窮迴圈   ServiceManager 不能呼叫 ServiceManager Service 不能呼叫 Service Checker 不能呼叫 Checker Validator 不能呼叫 Validator Repository 不能呼叫 Repository CacheManager 不能呼叫 CacheManager   獨立結構可以在任何一階層去呼叫  \r架構設計邏輯範例說明 A. 資料控制結構 Controller (控制器)    項目 說明     用途 控制資料流程   可以存取結構 Checker、ServiceManager、Service、DB transaction，所有獨立結構   可以被存取結構 無    處理 HTTP 請求的入口，依照需求呼叫 ServiceManager 或 Service 去做資料的存取，大部分情況呼叫 Service 去組合需要的資料就好，若相同的組合邏輯在不同的 Controller 都有用到，那就使用 ServiceManager 去組合不同的 Service\n要確保所有 Service 商業邏輯都正確跑完才允許對資料做異動，並避免 Transaction 在 Controller 及 Service 被重複呼叫，導致無法正確鎖定資料狀態，所以使用 Controller 當作資料交易（Transaction）的控制點\n\u0026lt;?php class PostController extends Controller { public function __construct( PostServiceManager $PostServiceManager, PostService $PostService, CommentService $CommentService, PostChecker $PostChecker ) { $this-\u0026gt;PostServiceManager = $PostServiceManager; $this-\u0026gt;PostService = $PostService; $this-\u0026gt;CommentService = $CommentService; $this-\u0026gt;PostChecker = $PostChecker; } \/\/ 顯示文章  public function show($post_id) { try { \/\/ 驗證資料  $input = [ \u0026#39;post_id\u0026#39; =\u0026gt; $post_id ]; $this-\u0026gt;PostChecker-\u0026gt;checkShow($input); \/\/ 撈取文章  $Post = $this-\u0026gt;PostServiceManager-\u0026gt;findPost($post_id); \/\/ 撈取文章留言  $Comment = $this-\u0026gt;CommentService-\u0026gt;getCommentByPostId(post_id); } catch (Exception $exception) { throw $exception } } \/\/ 更新文章  public function update($post_id) { try { \/\/ 驗證資料  $input = request()-\u0026gt;all(); $input[\u0026#39;post_id\u0026#39;] = $post_id; $this-\u0026gt;PostChecker-\u0026gt;checkUpdate($input); \/\/ 交易開始  DB::beginTransaction(); \/\/ 更新文章  $Post = $this-\u0026gt;PostService-\u0026gt;update($post_id, $input); \/\/ 交易結束  DB::commit(); } catch (Exception $exception) { \/\/ 交易失敗  DB::rollBack(); throw $exception } } } \rServiceManager (服務整合管理)    項目 說明     用途 組合管理不同 Service 的商業邏輯   可以存取結構 Service、所有獨立結構   可以被存取結構 Controller    使用不同 Service 撈取資料，將不同資料組合成商業邏輯，供 Controller 做存取\n\u0026lt;?php class PostServiceManager { public function __construct( PostService $PostService, UserService $UserService ) { $this-\u0026gt;PostService = $PostService; $this-\u0026gt;UserService = $UserService; } \/\/ 撈取文章資料  public function findPost($post_id){ try { \/\/ 撈取文章  $Post = $this-\u0026gt;PostService-\u0026gt;findPost($post_id); \/\/ 撈取文章作者資料  $user_id = $Post-\u0026gt;user_id; $Post-\u0026gt;user = $this-\u0026gt;UserService-\u0026gt;findUser($user_id); return $Post; } catch (Exception $exception) { throw $exception } } } Service (服務)    項目 說明     用途 處理商業邏輯   可以存取結構 Repository、所有獨立結構   可以被存取結構 Controller、ServiceManager    使用不同的 Repository 撈取資料，將不同資料組合成商業邏輯\n\u0026lt;?php class PostService { public function __construct( PostRepository $PostRepository, PostTagRepository $PostTagRepository ) { $this-\u0026gt;PostRepository = $PostRepository; $this-\u0026gt;PostTagRepository = $PostTagRepository; } \/\/ 撈取文章  public function findPost($post_id) { try { \/\/ 撈取文章  $Post = $this-\u0026gt;PostRepository-\u0026gt;find($post_id); \/\/ 撈取文章標籤  $Tag = $this-\u0026gt;PostTagRepository-\u0026gt;getByPostId($post_id); return [$Post, $Tag]; } catch (Exception $exception) { throw $exception } } } \rRepository (資源庫)    項目 說明     用途 資料表資料撈取邏輯   可以存取結構 Model、所有獨立結構   可以被存取結構 Service    撈取特定 Model 資料，像 PostRepository 可以存取 Post Model (模型) 的 基本資料，並使用不同條件撈取 Model 的資料，供 Service 做存取\n也可以使用 PostRecommendRepository 存取 Post Model (模型) 的 推薦資料\n同一個 Model (模型) 可以用不同的 Repository 去呼叫，但同一 Repository 只能有一個 Model (模型)\n\u0026lt;?php class PostRepository { public function __construct( Post $Post ) { $this-\u0026gt;Post = $Post; } public function find($post_id) { try { \/\/ 撈取資料庫文章資料  $Post = $this-\u0026gt;Post-\u0026gt;find($post_id); return $Post; } catch (Exception $exception) { throw $exception } } public function findLatestPost() { try { \/\/ 撈取資料庫文章資料  $Post = $this-\u0026gt;Post -\u0026gt;order(\u0026#39;created_at\u0026#39;, \u0026#39;desc\u0026#39;) -\u0026gt;first(); return $Post; } catch (Exception $exception) { throw $exception } } } Model (資料庫模型)    項目 說明     用途 資料表設定   可以存取結構 所有獨立結構   可以被存取結構 Repository    Eloquent 存取資料表相關設定，使用 Eloquent 直接存取資料表資料\n\u0026lt;?php class Post extends Model { protected $table = \u0026#39;post\u0026#39;; protected $fillable = []; protected $primaryKey = \u0026#39;id\u0026#39;; protected $dates = [\u0026#39;created_at\u0026#39;, \u0026#39;updated_at\u0026#39;]; protected $presenter = PostPresenter::class; } \rPresenter (資料呈現)    項目 說明     用途 資料表資料格式呈現轉換   可以存取結構 所有獨立結構   可以被存取結構 Model    提供 Model 的資料用其他方式呈現\n\u0026lt;?php class PostPresenter extends Presenter { public function created_at_human_time() { return $this-\u0026gt;created_at-\u0026gt;diffForHumans(); } } Checker (檢查器)    項目 說明     用途 根據 Controller 所需商業邏輯，驗證不同資料表欄位資料   可以存取結構 Validator、所有獨立結構   可以被存取結構 Controller    協助 Controller 驗證不同資料表資料的正確性，若驗證錯誤則丟處例外，Controller 根據例外代碼去做處理\n\u0026lt;?php class PostValidator { public function checkFindPost($input){ \/\/ 驗證文章資料  $this-\u0026gt;PostValidator-\u0026gt;validatePostId($input); $this-\u0026gt;PostValidator-\u0026gt;validatePostContent($input); \/\/ 驗證會員資料  $this-\u0026gt;MemberValidator-\u0026gt;validateMemberId($input); } } Validator (驗證器)    項目 說明     用途 資料表欄位資料驗證   可以存取結構 所有獨立結構   可以被存取結構 Checker    協助 Checker 驗證資料的正確性，若驗證錯誤則丟處例外，Checker 根據例外代碼去做處理\n\u0026lt;?php class PostValidator { public function validatePostId($input){ \/\/ 設定驗證規則  $rules = [ \u0026#39;post_id\u0026#39; =\u0026gt; [ \u0026#39;required\u0026#39;, \u0026#39;max:20\u0026#39;, ], ]; \/\/ 開始驗證  $this-\u0026gt;validator = Validator::make($input, $rules); if ($this-\u0026gt;validator-\u0026gt;fails()) { throw new Exception( \u0026#39;文章編號格式錯誤\u0026#39;, PostExceptionCode::POST_ID_FORMAT_ERROR ); } } } \rCombination（資料整合）    項目 說明     用途 整理 Repository 資料成資訊   可以存取結構 所有獨立結構   可以被存取結構 Serivce、CombinationManager    當 Service 從 Repository 取得資料後，協助整理判斷 Repository 資料的屬性狀態，像是可以從 文章編號 取得 文章網址\n\u0026lt;?php class PostsCombination { \/\/ 設定整合資訊  public function setCombinationInfo(\u0026amp;$Posts) { if (!($Posts instanceof Posts)) { return false; } \/\/ 文章網址  $url = url(\u0026#34;article\/{$Posts-\u0026gt;id}\u0026#34;) $Posts-\u0026gt;info-\u0026gt;url = $url; } } CombinationManager（複合資料整合管理）    項目 說明     用途 整理多個 Service 的資料成資訊   可以存取結構 Combination、Serivce、所有獨立結構   可以被存取結構 ServiceManager、Controller    當整合的資料需要經過不同的資料來源去判斷要產生什麼複合資訊，CombinationManager 協助整理不同來源的資料去做資料整合，目前會從 ServiceManager 去取得不同 Service 的資訊，所以將 CombinationManager 放在這一階層去進行呼叫\n\u0026lt;?php class PostsCombinationManager { protected $UserService; public function __construct( UserCombination $UserCombination, ProjectService $ProjectService ) { \/\/ 服務  $this-\u0026gt;UserCombination = $UserCombination; } public function setCombinationInfo(\u0026amp;$combination_data) { $Posts = array_get($combination_data, \u0026#39;Posts\u0026#39;); if ($Posts instanceof Posts) { \/\/ 設定文章關聯作者資訊  $this-\u0026gt;UserCombination-\u0026gt;setCombinationInfo($Posts-\u0026gt;User); \/\/ 是專題文章  if ($Posts-\u0026gt;type == PostsConstant::TYPE_PROJECT) { $Project = $this-\u0026gt;ProjectService-\u0026gt;findProjectByPostId($Posts-\u0026gt;id); $url = url(\u0026#34;project\/{$Project-\u0026gt;slug}\/{$Posts-\u0026gt;id}\u0026#34;) $Posts-\u0026gt;info-\u0026gt;url = $url; }; } } } \rB.獨立結構 CacheManager (快取)    項目 說明     用途 管理資源快取鍵值及清除快取   可以存取結構 x   可以被存取結構 無限制    在 複雜 的資料庫查詢（Repository）或是商業邏輯（Service、ServiceManager），想要在一定時間內不要再重複的進行複雜的運算，可以透過快取將運算的結果快取起來\nPostsCacheManager 文章資源庫\nclass PostRepository { public function __construct( Post $Post, PostsCacheManager $PostsCacheManager ) { $this-\u0026gt;Post = $Post; $this-\u0026gt;PostsCacheManager = $PostsCacheManager; } public function find($post_id) { try { $cache_key = $this-\u0026gt;PostsCacheManager-\u0026gt;getPostIdCacheKey($post_id); $Posts = $this-\u0026gt;PostsCacheManager-\u0026gt;getCache($cache_key); if (!is_null($Posts)) { return $Posts; } \/\/ 撈取資料庫文章資料  $Posts = $this-\u0026gt;Post-\u0026gt;find($post_id); if (!is_null($Posts)) { \/\/ 有該資料，將資料存入快取  $this-\u0026gt;PostsCacheManager-\u0026gt;putCache($Posts, $cache_key); } return $Posts; } catch (Exception $exception) { throw $exception } } public function findLatestPost() { try { \/\/ 撈取資料庫文章資料  $Post = $this-\u0026gt;Post -\u0026gt;order(\u0026#39;created_at\u0026#39;, \u0026#39;desc\u0026#39;) -\u0026gt;first(); return $Post; } catch (Exception $exception) { throw $exception } } } PostsCacheManager 文章快取\nclass PostsCacheManager { protected $cache_key = [ \/\/ 文章快取  \u0026#39;post_id\u0026#39; =\u0026gt; \u0026#39;[PostById][post_id:{post_id}]\u0026#39;, \/\/ 已發布文章快取  \u0026#39;published_post_id\u0026#39; =\u0026gt; \u0026#39;[PublishedPostById][post_id:{post_id}]\u0026#39;, ]; \/** * 文章快取 *\/ public function getPostIdCacheKey($post_id) { $search = [ \u0026#39;{post_id}\u0026#39;, ]; $replace = [ $post_id, ]; $cache_key = str_replace($search, $replace, $this-\u0026gt;cache_key[\u0026#39;post_id\u0026#39;]); return $cache_key; } \/** * 已發布文章快取 *\/ public function getPublishedPostIdCacheKey($post_id) { $search = [ \u0026#39;{post_id}\u0026#39;, ]; $replace = [ $post_id, ]; $cache_key = str_replace($search, $replace, $this-\u0026gt;cache_key[\u0026#39;published_post_id\u0026#39;]); return $cache_key; } \/** * 文章快取 *\/ public function getPostIdCacheKey($post_id) { $search = [ \u0026#39;{post_id}\u0026#39;, ]; $replace = [ $post_id, ]; $cache_key = str_replace($search, $replace, $this-\u0026gt;cache_key[\u0026#39;post_id\u0026#39;]); return $cache_key; } \/** * 清除文章快取 *\/ public function forgetPostsCache($cache_data) { $Posts = array_get($cache_data, \u0026#39;Posts\u0026#39;); if (!is_null($Posts) AND ($Posts instanceof Posts)) { $cache_key = $this-\u0026gt;getPostIdCacheKey($post_id); $is_cache_forget = $Cache::forget($cache_key); $cache_key = $this-\u0026gt;getPublishedPostIdCacheKey($post_id); $is_cache_forget = $Cache::forget($cache_key); \/\/ .... 清除文章其他快取  } } } \rConstant (常數)    項目 說明     用途 定義資料狀態名稱   可以存取結構 x   可以被存取結構 無限制    資料皆為靜態變數，可以供所有資料層級 (e.g. Controller、Service、Repository) 做存取\n\u0026lt;?php class PostConstant { const POST_TYPE_PUBLIC = \u0026#39;P\u0026#39;; const POST_TYPE_DELETE = \u0026#39;D\u0026#39;; } Support (支援)    項目 說明     用途 協助處理獨立邏輯資料處理   可以存取結構 x   可以被存取結構 無限制    方法皆為靜態變數，可以供所有資料層級 (e.g. Controller、Service、Repository) 做存取\n若有其他可供全域共用的方法皆寫在 Support 靜態方法供大家存取\n\u0026lt;?php class PostSupport { \/\/ 撈取所有文章類型  public static function getAllPostType() { $all_post_type = [ PostConstant::POST_TYPE_PUBLIC, PostConstant::POST_TYPE_DELETE, ]; return $all_post_type; } } \rExceptionCode (例外代碼)    項目 說明     用途 例外錯誤代碼定義   可以存取結構 x   可以被存取結構 x    資料皆為靜態變數，可以供所有資料層級 (e.g. Controller、Service、Repository) 做存取\n\u0026lt;?php class PostExceptionCode { const POST_ID_FORMAT_ERROR = 10000001; const POST_NOT_FOUND = 10000002; const POST_TAG_NOT_FOUND = 10000003; } View (視圖) 使用限制 View 的職責是負責顯示資料，所有的資料應由 Controller 準備好再傳給 View，所以不要在 View 內有複雜的程式判斷邏輯，在 View 裡面只有 if, for, foreach 跟 echo 列印 的程式，僅需要將資料呈現在對的 HTML 裡面，不要再對資料重複處理過。\n像是文章的網址可能會因為類型不同會有不同的網址，像是一般文章網址可能為 http:\/\/kejyun.com\/post\/1，而影音文章網址可能為 http:\/\/kejyun.com\/video\/2，兩者的資料皆為 Post 資料表的資料，在 View 中要顯示網址應為 echo $Post-\u0026gt;post_url; 將網址印出，post_url 則是在傳給 View 之前就經過邏輯判斷的資料，而不是在 View 中判斷不同文章類型（PostConstant::POST_TYPE_NORMAL, PostConstant::POST_TYPE_VIDEO）在 View 中顯示不同的網址資料。\n之後若文章網址邏輯需要修改，則需要到各個 View 中去修改，很容易漏改道造成系統程式出錯\n\u0026lt;a href=\u0026#34;{{ $Post-\u0026gt;info-\u0026gt;post_url }}\u0026#34;\u0026gt; {{ $Post-\u0026gt;Title }}\u0026lt;\/a\u0026gt; "
+	}
+</script>
+
+  
+
+  
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+	  
+		
+		
+		
+		
+		
+	
+
+	
+	
+	
+	  
+		
+		
+		
+		
+		
+	
+
+	
+	
+	
+	  
+		
+		
+		
+		
+		
+	
+
+	
+	
+	
+	  
+		
+		
+		
+		
+		
+	
+
+	
+	
+	
+
+
+
+<script type="application/ld+json">
+{
+	"@context": "http://schema.org",
+	"@type": "BreadcrumbList",
+	"itemListElement":
+		[{
+			"@type": "ListItem",
+				"position": 1,
+				"item": {
+					"@id": "https:\/\/laravel-for-newbie.kejyun.com\/",
+					"name": "Home"
+				}
+		},
+		
+			
+		
+			
+				{
+					"@type": "ListItem",
+					"position":  2 ,
+					"item": {
+						"@id": "https:\/\/laravel-for-newbie.kejyun.com\/zh",
+						"name": "Zh"
+					}
+				}
+				, 
+			
+		
+			
+				{
+					"@type": "ListItem",
+					"position":  3 ,
+					"item": {
+						"@id": "https:\/\/laravel-for-newbie.kejyun.com\/zh\/project-manage",
+						"name": "Project manage"
+					}
+				}
+				, 
+			
+		
+			
+				{
+					"@type": "ListItem",
+					"position":  4 ,
+					"item": {
+						"@id": "https:\/\/laravel-for-newbie.kejyun.com\/zh\/project-manage\/file-structure",
+						"name": "File structure"
+					}
+				}
+				, 
+			
+		
+			
+				{
+					"@type": "ListItem",
+					"position":  5 ,
+					"item": {
+						"@id": "https:\/\/laravel-for-newbie.kejyun.com\/zh\/project-manage\/file-structure\/combination-cache-manager-structure-principle",
+						"name": "Combination cache manager structure principle"
+					}
+				}
+				
+			
+		
+	]
+}
+</script>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+
+
+<script type="application/ld+json">
+{
+"@context": "http://www.schema.org",
+"@type": "Person",
+"@id": "https:\/\/laravel-for-newbie.kejyun.com\/zh\/project-manage\/file-structure\/combination-cache-manager-structure-principle\/",
+"name": "KeJyun",
+"alternateName": "KeJyun",
+"nationality": "Taiwan",
+
+"affiliation": [
+	{
+		"@type": "Organization",
+		"name": "KJ",
+		"sameAs": [ "\r\n\r\n\r\n\r\n\r\n\"https://www.facebook.com/kejyunTaiwan\",\r\n\r\n\r\n\r\n\"https://github.com/kejyun\",\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\"https://kejyun.com/\"\r\n"
+		]
+  	}
+],
+
+"gender": "male",
+"Description": "IT Manager",
+"disambiguatingDescription": "Hi I\u0027m Web Developer in Taiwan",
+
+"worksFor": [
+	{
+		"@type": "Organization",
+		"name": "KJ",
+		"sameAs": [ "\r\n\r\n\r\n\r\n\r\n\"https://www.facebook.com/kejyunTaiwan\",\r\n\r\n\r\n\r\n\"https://github.com/kejyun\",\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\"https://kejyun.com/\"\r\n"
+		]
+	}
+],
+"url": "https:\/\/laravel-for-newbie.kejyun.com\/",
+"image": "https:\/\/laravel-for-newbie.kejyun.com\/company\/team\/KeJyun.png",
+
+"sameAs": [ "\r\n\r\n\r\n\r\n\r\n\r\n\"https://ca.linkedin.com/in/kejyun/en\",\r\n\r\n\r\n\"https://github.com/kejyun\",\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\"\"\r\n"
+	]
+}
+</script>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+
+<script type="application/ld+json">
+[
+	{
+		"@context": "http://schema.org",
+		"@type": "Webpage",
+		"specialty": "Laravel 菜雞修煉場",
+		"mainContentOfPage": {
+			"@context": "http://schema.org/",
+			"@type": "WebPageElement",
+			"cssSelector": ".body-content"
+		},
+		"primaryImageOfPage": "https:\/\/laravel-for-newbie.kejyun.com\/images\/featured-background.jpeg"
+	},
+	{
+		"@context": "http://schema.org",
+		"@type": "WebSite",
+		"@id": "https:\/\/laravel-for-newbie.kejyun.com\/",
+		"additionalType": ["CreativeWork", "Person"],
+		"url": "https:\/\/laravel-for-newbie.kejyun.com\/",
+		"name": "Laravel 菜雞修煉場",
+		"alternateName": "Laravel 菜雞修煉場",
+		"headline": "Laravel 菜雞修煉場",
+		"image": "https:\/\/laravel-for-newbie.kejyun.com\/images\/featured-background.jpeg",
+		"inLanguage": "zh",
+		"author": "",
+		"description": "Laravel 菜雞修煉場",
+		"disambiguatingDescription": "Laravel 菜雞修煉場",
+		"isFamilyFriendly": "http://schema.org/True",
+		"contentRating": "NR",
+		"sourceOrganization": "Laravel 菜雞修煉場",
+		"publisher": {
+		  "@type": "Organization",
+		  "name": "Laravel 菜雞修煉場",
+		  "logo": {
+		    "@type": "ImageObject",
+		    "url": "https:\/\/laravel-for-newbie.kejyun.com\/images\/featured-background.png",
+		    "height": 60,
+		    "width": 107
+		  }
+		},
+		"mainEntity": {
+			"@context": "http://schema.org",
+			"@type": "localBusiness",
+			"name": "Laravel 菜雞修煉場",
+			"image":"https:\/\/laravel-for-newbie.kejyun.com\/images\/featured-background.png",
+			
+			"priceRange":"$$",
+			
+
+			
+			"address": {
+				"@type": "PostalAddress",
+				"streetAddress": "Taipei street",
+				"addressLocality": "Taipei City",
+				"addressRegion": "Taipei",
+				"addressCountry": "Taiwan",
+				"postalCode": "100"
+			},
+			"aggregateRating": {
+				"@type": "AggregateRating",
+				"ratingValue": "4.5",
+				"reviewCount": "50"
+			}
+		},
+		"potentialAction": {
+			"@type": "SearchAction",
+			"target": "https:\/\/laravel-for-newbie.kejyun.com\/?search={search_term}",
+			"query-input": "required name=search_term"
+		},
+		"keywords":[
+			"Laravel 菜雞修煉場", "Laravel for Newbie", "KJ", "kejyun"
+		],
+		"hasPart": [
+			{
+				"@context": "http://schema.org/",
+				"@type": "WPHeader",
+				"@id": "#header",
+				"headline": "Laravel 菜雞修煉場",
+				"cssSelector": "#header",
+				"potentialAction": [],
+				"@graph":
+				[
+					{
+						"@context": "https://schema.org",
+						"@type":"SiteNavigationElement",
+						"@id":"#header",
+						"name": "進階",
+						"url": "https:\/\/laravel-for-newbie.kejyun.com\/zh\/advanced\/"
+					}, 
+					{
+						"@context": "https://schema.org",
+						"@type":"SiteNavigationElement",
+						"@id":"#header",
+						"name": "專案管理",
+						"url": "https:\/\/laravel-for-newbie.kejyun.com\/zh\/project-manage\/"
+					}]
+			},
+			{
+				"@context": "http://schema.org/",
+				"@type": "WPSidebar",
+				"cssSelector": "#sidebar",
+				"citation": [
+				"https:\/\/laravel-for-newbie.kejyun.com\/zh\/advanced\/", "https:\/\/laravel-for-newbie.kejyun.com\/zh\/project-manage\/"
+				]
+			},
+			{
+				"@context": "http://schema.org/",
+				"@type": "WPFooter",
+				"cssSelector": ".footer",
+				"@id": "#footer",
+				"copyrightHolder":"Laravel 菜雞修煉場",
+				"publisher": "Laravel 菜雞修煉場",
+				"copyrightYear":"2021"
+			}
+		]
+	}
+]
+</script>
+
+  
+
+  
+
+<link rel="canonical" href="https://laravel-for-newbie.kejyun.com/zh/project-manage/file-structure/combination-cache-manager-structure-principle/" />
+
+
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-RZQ2D0XJX3"></script>
+<script>
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.dataLayer = window.dataLayer || [];
+	function gtag(){dataLayer.push(arguments);}
+	gtag('js', new Date());
+	gtag('config', 'G-RZQ2D0XJX3', { 'anonymize_ip': false });
+}
+</script>
+
+
+  </head>
+  <body class="td-page">
+    <header>
+      
+<nav class="js-navbar-scroll navbar navbar-expand navbar-dark flex-column flex-md-row td-navbar">
+        <a class="navbar-brand" href="/zh/">
+		<span class="navbar-logo"><svg id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 500 500" style="enable-background:new 0 0 500 500"><g><path style="fill:#fff" d="M116.8525 421.9722c-5.7041.0-10.3442-4.3127-10.3442-9.6129V88.183c0-5.3002 4.6401-9.6117 10.3442-9.6117H320.858c3.0347.0 9.3959.5498 11.7506 2.6302l.3545.3442 58.905 63.2912c2.3101 2.491 2.9202 8.4928 2.9202 11.3184v256.2039c0 5.3002-4.6407 9.6129-10.3436 9.6129H116.8525z"/><g><g><g><path style="fill:#767676" d="M384.4445 423.2066H116.852c-6.3839.0-11.5786-4.8658-11.5786-10.8474V88.1831c0-5.9804 5.1947-10.8461 11.5786-10.8461h204.0062c.377.0 9.2786.0329 12.568 2.9389l.3947.3833 58.9508 63.337c3.2135 3.4652 3.2514 11.7924 3.2514 12.1593v256.2036C396.0231 418.3408 390.8284 423.2066 384.4445 423.2066zM116.5079 411.9189c.0848.0278.1999.0531.3441.0531h267.5925c.1442.0.2581-.0253.3441-.0531V156.1556c-.0076-.9033-.3593-3.7347-.7034-5.0037l-57.6527-61.9416c-1.4651-.3176-4.4533-.6389-5.5742-.6389H116.852c-.143.0-.2594.024-.3441.0531V411.9189zm267.4533-261.149zM327.0321 89.371v.0013V89.371z"/></g></g></g><g><g><path style="fill:#5b7fc0" d="M189.0874 210.1754l.0012-.0012c7.7751.0012 15.0295 4.1862 18.932 10.9234 1.9177 3.3159 2.9305 7.1011 2.9293 10.9378.0 5.8394-2.2733 11.3304-6.4032 15.4604-4.1288 4.1288-9.6186 6.4032-15.458 6.4032s-11.328-2.2733-15.458-6.4032-6.4032-9.6186-6.4056-15.4628c.0012-6.025 2.454-11.4897 6.4116-15.4473C177.5953 212.627 183.0601 210.1742 189.0874 210.1754zm7.993 21.8576c.0012-1.4042-.3687-2.7868-1.063-3.9887-1.4293-2.4684-4.0833-3.9995-6.9299-4.0019-4.4077.0024-7.993 3.5877-7.993 7.993.0 2.1356.832 4.1431 2.3427 5.6539 1.5083 1.5083 3.5159 2.3403 5.6503 2.3415 2.1356.0 4.1443-.8308 5.6539-2.3403S197.0816 234.1722 197.0804 232.033z"/><path style="opacity:.3;fill:#fff" d="M189.0898 210.176c7.7763.0 15.0283 4.1826 18.926 10.9151 1.9201 3.3136 2.9377 7.0988 2.9353 10.9462.0024 12.0643-9.8065 21.8636-21.8613 21.8613-12.0547.0024-21.8636-9.8066-21.8612-21.8613.0-6.0285 2.4516-11.4921 6.4116-15.452C177.5977 212.6276 183.0612 210.176 189.0898 210.176zm7.9941 21.8612c0-1.4078-.3711-2.7892-1.0702-3.9959-1.4269-2.466-4.0797-3.9983-6.924-3.9983-4.4005-.0048-7.9918 3.5817-7.9942 7.9942.0024 4.4077 3.5865 7.9918 7.9942 7.9942 2.2027.0 4.2018-.8978 5.6479-2.3439C196.1861 236.239 197.0839 234.2399 197.0839 232.0372z"/><g><defs><path id="SVGID_1_" d="M194.7376 237.6875c-1.4461 1.4461-3.4452 2.3439-5.6479 2.3439-4.4077-.0024-7.9918-3.5865-7.9942-7.9942.0024-4.4125 3.5937-7.999 7.9942-7.9942 2.8443.0 5.497 1.5323 6.924 3.9983.6991 1.2067 1.0702 2.5881 1.0702 3.9959C197.0839 234.2399 196.1861 236.239 194.7376 237.6875z"/></defs><clipPath id="SVGID_2_"><use xlink:href="#SVGID_1_" style="overflow:visible"/></clipPath><path style="clip-path:url(#SVGID_2_);fill:#fff" d="M190.0704 225.0237c-4.4005-.0048-7.9918 3.5817-7.9942 7.9942.0011 1.9546.7088 3.7452 1.8782 5.1354-1.7447-1.4674-2.8575-3.663-2.8588-6.116.0024-4.4125 3.5936-7.999 7.9942-7.9942 2.3802-1e-4 4.616 1.0833 6.1218 2.8788C193.7885 225.7247 191.9774 225.0237 190.0704 225.0237z"/><path style="opacity:.13;clip-path:url(#SVGID_2_);fill:#020202" d="M190.0704 225.0237c-4.4005-.0048-7.9918 3.5817-7.9942 7.9942.0011 1.9546.7088 3.7452 1.8782 5.1354-1.7447-1.4674-2.8575-3.663-2.8588-6.116.0024-4.4125 3.5936-7.999 7.9942-7.9942 2.3802-1e-4 4.616 1.0833 6.1218 2.8788C193.7885 225.7247 191.9774 225.0237 190.0704 225.0237z"/></g><g><defs><path id="SVGID_3_" d="M189.0898 210.176c7.7763.0 15.0283 4.1826 18.926 10.9151 1.9201 3.3136 2.9377 7.0988 2.9353 10.9462.0024 12.0643-9.8065 21.8636-21.8613 21.8613-12.0547.0024-21.8636-9.8066-21.8612-21.8613.0-6.0285 2.4516-11.4921 6.4116-15.452C177.5977 212.6276 183.0612 210.176 189.0898 210.176zm7.9941 21.8612c0-1.4078-.3711-2.7892-1.0702-3.9959-1.4269-2.466-4.0797-3.9983-6.924-3.9983-4.4005-.0048-7.9918 3.5817-7.9942 7.9942.0024 4.4077 3.5865 7.9918 7.9942 7.9942 2.2027.0 4.2018-.8978 5.6479-2.3439C196.1861 236.239 197.0839 234.2399 197.0839 232.0372z"/></defs><clipPath id="SVGID_4_"><use xlink:href="#SVGID_3_" style="overflow:visible"/></clipPath><path style="clip-path:url(#SVGID_4_);fill:#5b7fc0" d="M172.6595 215.6045c-3.96 3.96-6.4116 9.4235-6.4116 15.452-.0024 12.0547 9.8066 21.8636 21.8613 21.8612 12.0547.0024 21.8636-9.797 21.8613-21.8612.0024-3.8475-1.0151-7.6326-2.9353-10.9462-3.8977-6.7324-11.1497-10.9151-18.926-10.9151C182.0806 209.1953 176.6171 211.647 172.6595 215.6045z"/></g></g><rect x="198.8952" y="225.1043" style="fill:#5b7fc0" width="122.6266" height="13.8671"/></g><g><path style="fill:#d95140" d="M189.0874 155.7611l.0012-.0012c7.7751.0012 15.0295 4.1862 18.932 10.9234 1.9177 3.3159 2.9305 7.1011 2.9293 10.9378.0 5.8394-2.2733 11.3304-6.4032 15.4604-4.1288 4.1288-9.6186 6.4032-15.458 6.4032s-11.328-2.2733-15.458-6.4032-6.4032-9.6186-6.4056-15.4628c.0012-6.0249 2.454-11.4897 6.4116-15.4473C177.5953 158.2128 183.0601 155.7599 189.0874 155.7611zm7.993 21.8577c.0012-1.4042-.3687-2.7868-1.063-3.9887-1.4293-2.4684-4.0833-3.9995-6.9299-4.0019-4.4077.0024-7.993 3.5877-7.993 7.993.0 2.1356.832 4.1431 2.3427 5.6539 1.5083 1.5083 3.5159 2.3403 5.6503 2.3415 2.1356.0 4.1443-.8308 5.6539-2.3403C196.2508 181.7667 197.0816 179.758 197.0804 177.6188z"/><path style="opacity:.3;fill:#fff" d="M189.0898 155.7617c7.7763.0 15.0283 4.1826 18.926 10.9151 1.9201 3.3135 2.9377 7.0987 2.9353 10.9462.0024 12.0643-9.8065 21.8636-21.8613 21.8613-12.0547.0024-21.8636-9.8066-21.8612-21.8613.0-6.0285 2.4516-11.4921 6.4116-15.452C177.5977 158.2134 183.0612 155.7617 189.0898 155.7617zm7.9941 21.8613c0-1.4078-.3711-2.7892-1.0702-3.9959-1.4269-2.466-4.0797-3.9983-6.924-3.9983-4.4005-.0048-7.9918 3.5817-7.9942 7.9942.0024 4.4077 3.5865 7.9918 7.9942 7.9942 2.2027.0 4.2018-.8978 5.6479-2.3439C196.1861 181.8248 197.0839 179.8256 197.0839 177.623z"/><g><defs><path id="SVGID_5_" d="M194.7376 183.2733c-1.4461 1.4461-3.4452 2.3439-5.6479 2.3439-4.4077-.0024-7.9918-3.5865-7.9942-7.9942.0024-4.4125 3.5937-7.9989 7.9942-7.9942 2.8443.0 5.497 1.5323 6.924 3.9983.6991 1.2067 1.0702 2.5881 1.0702 3.9959C197.0839 179.8256 196.1861 181.8248 194.7376 183.2733z"/></defs><clipPath id="SVGID_6_"><use xlink:href="#SVGID_5_" style="overflow:visible"/></clipPath><path style="clip-path:url(#SVGID_6_);fill:#fff" d="M190.0704 170.6095c-4.4005-.0048-7.9918 3.5817-7.9942 7.9942.0011 1.9546.7088 3.7452 1.8782 5.1354-1.7447-1.4674-2.8575-3.663-2.8588-6.116.0024-4.4125 3.5936-7.999 7.9942-7.9942 2.3802-1e-4 4.616 1.0833 6.1218 2.8788C193.7885 171.3104 191.9774 170.6095 190.0704 170.6095z"/><path style="opacity:.13;clip-path:url(#SVGID_6_);fill:#020202" d="M190.0704 170.6095c-4.4005-.0048-7.9918 3.5817-7.9942 7.9942.0011 1.9546.7088 3.7452 1.8782 5.1354-1.7447-1.4674-2.8575-3.663-2.8588-6.116.0024-4.4125 3.5936-7.999 7.9942-7.9942 2.3802-1e-4 4.616 1.0833 6.1218 2.8788C193.7885 171.3104 191.9774 170.6095 190.0704 170.6095z"/></g><g><defs><path id="SVGID_7_" d="M189.0898 155.7617c7.7763.0 15.0283 4.1826 18.926 10.9151 1.9201 3.3135 2.9377 7.0987 2.9353 10.9462.0024 12.0643-9.8065 21.8636-21.8613 21.8613-12.0547.0024-21.8636-9.8066-21.8612-21.8613.0-6.0285 2.4516-11.4921 6.4116-15.452C177.5977 158.2134 183.0612 155.7617 189.0898 155.7617zm7.9941 21.8613c0-1.4078-.3711-2.7892-1.0702-3.9959-1.4269-2.466-4.0797-3.9983-6.924-3.9983-4.4005-.0048-7.9918 3.5817-7.9942 7.9942.0024 4.4077 3.5865 7.9918 7.9942 7.9942 2.2027.0 4.2018-.8978 5.6479-2.3439C196.1861 181.8248 197.0839 179.8256 197.0839 177.623z"/></defs><clipPath id="SVGID_8_"><use xlink:href="#SVGID_7_" style="overflow:visible"/></clipPath><path style="clip-path:url(#SVGID_8_);fill:#d95140" d="M172.6595 161.1903c-3.96 3.96-6.4116 9.4235-6.4116 15.452-.0024 12.0547 9.8066 21.8636 21.8613 21.8613 12.0547.0024 21.8636-9.797 21.8613-21.8613.0024-3.8474-1.0151-7.6326-2.9353-10.9462-3.8977-6.7324-11.1497-10.9151-18.926-10.9151C182.0806 154.7811 176.6171 157.2327 172.6595 161.1903z"/></g><rect x="198.8952" y="170.69" style="fill:#d95140" width="122.6266" height="13.8671"/></g><g><g><path style="fill:#56a55c" d="M189.5379 264.6147l.0012-.0012c7.7751.0012 15.0294 4.1862 18.932 10.9235 1.9177 3.3159 2.9305 7.1011 2.9293 10.9378.0 5.8394-2.2733 11.3304-6.4032 15.4604-4.1288 4.1288-9.6186 6.4032-15.458 6.4032-5.8394.0-11.3281-2.2733-15.458-6.4032-4.13-4.13-6.4032-9.6186-6.4056-15.4628.0012-6.0249 2.454-11.4897 6.4116-15.4472C178.0458 267.0663 183.5105 264.6135 189.5379 264.6147zm7.993 21.8576c.0012-1.4042-.3687-2.7868-1.063-3.9887-1.4293-2.4684-4.0833-3.9995-6.9299-4.0019-4.4077.0024-7.993 3.5877-7.993 7.993.0 2.1356.832 4.1431 2.3427 5.6538 1.5083 1.5083 3.5159 2.3403 5.6503 2.3415 2.1356.0 4.1443-.8308 5.6539-2.3403C196.7013 290.6202 197.5321 288.6115 197.5309 286.4723z"/><path style="opacity:.3;fill:#fff" d="M189.5403 264.6153c7.7763.0 15.0283 4.1826 18.926 10.9151 1.9201 3.3135 2.9377 7.0987 2.9353 10.9462.0024 12.0643-9.8065 21.8636-21.8613 21.8613-12.0547.0024-21.8636-9.8065-21.8612-21.8613.0-6.0285 2.4516-11.492 6.4116-15.452C178.0482 267.0669 183.5117 264.6153 189.5403 264.6153zm7.9941 21.8612c0-1.4078-.3711-2.7892-1.0702-3.9959-1.4269-2.466-4.0797-3.9983-6.924-3.9983-4.4005-.0048-7.9918 3.5817-7.9942 7.9941.0024 4.4077 3.5865 7.9918 7.9942 7.9942 2.2027.0 4.2018-.8978 5.6479-2.3439C196.6366 290.6783 197.5344 288.6792 197.5344 286.4765z"/><g><defs><path id="SVGID_9_" d="M195.1881 292.1268c-1.4461 1.4461-3.4452 2.3439-5.6479 2.3439-4.4077-.0024-7.9918-3.5865-7.9942-7.9942.0024-4.4125 3.5937-7.9989 7.9942-7.9941 2.8443.0 5.497 1.5323 6.924 3.9983.6991 1.2067 1.0702 2.5881 1.0702 3.9959C197.5344 288.6792 196.6366 290.6783 195.1881 292.1268z"/></defs><clipPath id="SVGID_10_"><use xlink:href="#SVGID_9_" style="overflow:visible"/></clipPath><path style="clip-path:url(#SVGID_10_);fill:#fff" d="M190.5209 279.463c-4.4005-.0048-7.9918 3.5817-7.9942 7.9941.0011 1.9547.7088 3.7452 1.8782 5.1354-1.7446-1.4674-2.8575-3.6631-2.8588-6.1161.0024-4.4125 3.5936-7.999 7.9942-7.9941 2.3802-1e-4 4.616 1.0833 6.1218 2.8788C194.239 280.164 192.4279 279.463 190.5209 279.463z"/><path style="opacity:.13;clip-path:url(#SVGID_10_);fill:#020202" d="M190.5209 279.463c-4.4005-.0048-7.9918 3.5817-7.9942 7.9941.0011 1.9547.7088 3.7452 1.8782 5.1354-1.7446-1.4674-2.8575-3.6631-2.8588-6.1161.0024-4.4125 3.5936-7.999 7.9942-7.9941 2.3802-1e-4 4.616 1.0833 6.1218 2.8788C194.239 280.164 192.4279 279.463 190.5209 279.463z"/></g><g><defs><path id="SVGID_11_" d="M189.5403 264.6153c7.7763.0 15.0283 4.1826 18.926 10.9151 1.9201 3.3135 2.9377 7.0987 2.9353 10.9462.0024 12.0643-9.8065 21.8636-21.8613 21.8613-12.0547.0024-21.8636-9.8065-21.8612-21.8613.0-6.0285 2.4516-11.492 6.4116-15.452C178.0482 267.0669 183.5117 264.6153 189.5403 264.6153zm7.9941 21.8612c0-1.4078-.3711-2.7892-1.0702-3.9959-1.4269-2.466-4.0797-3.9983-6.924-3.9983-4.4005-.0048-7.9918 3.5817-7.9942 7.9941.0024 4.4077 3.5865 7.9918 7.9942 7.9942 2.2027.0 4.2018-.8978 5.6479-2.3439C196.6366 290.6783 197.5344 288.6792 197.5344 286.4765z"/></defs><clipPath id="SVGID_12_"><use xlink:href="#SVGID_11_" style="overflow:visible"/></clipPath><path style="clip-path:url(#SVGID_12_);fill:#56a55c" d="M173.11 270.0439c-3.96 3.96-6.4116 9.4235-6.4116 15.452-.0024 12.0547 9.8066 21.8636 21.8613 21.8613 12.0547.0024 21.8636-9.797 21.8613-21.8613.0024-3.8474-1.0151-7.6326-2.9353-10.9462-3.8977-6.7325-11.1497-10.9151-18.926-10.9151C182.5311 263.6346 177.0676 266.0863 173.11 270.0439z"/></g></g><rect x="199.3456" y="279.5436" style="fill:#56a55c" width="122.6266" height="13.8671"/></g><g><g><path style="fill:#f1bc42" d="M189.0874 318.7208l.0012-.0012c7.7751.0012 15.0295 4.1862 18.932 10.9234 1.9177 3.3159 2.9305 7.1011 2.9293 10.9378.0 5.8394-2.2733 11.3305-6.4032 15.4604-4.1288 4.1288-9.6186 6.4032-15.458 6.4032s-11.328-2.2733-15.458-6.4032-6.4032-9.6186-6.4056-15.4628c.0012-6.025 2.454-11.4897 6.4116-15.4472C177.5953 321.1724 183.0601 318.7196 189.0874 318.7208zm7.993 21.8576c.0012-1.4042-.3687-2.7868-1.063-3.9887-1.4293-2.4684-4.0833-3.9995-6.9299-4.0019-4.4077.0024-7.993 3.5877-7.993 7.993.0 2.1356.832 4.1431 2.3427 5.6539 1.5083 1.5083 3.5159 2.3403 5.6503 2.3415 2.1356.0 4.1443-.8308 5.6539-2.3403S197.0816 342.7176 197.0804 340.5784z"/><path style="opacity:.3;fill:#fff" d="M189.0898 318.7214c7.7763.0 15.0283 4.1826 18.926 10.915 1.9201 3.3136 2.9377 7.0988 2.9353 10.9462.0024 12.0643-9.8065 21.8636-21.8613 21.8612-12.0547.0024-21.8636-9.8065-21.8612-21.8612.0-6.0285 2.4516-11.4921 6.4116-15.452C177.5977 321.173 183.0612 318.7214 189.0898 318.7214zm7.9941 21.8612c0-1.4078-.3711-2.7892-1.0702-3.9959-1.4269-2.466-4.0797-3.9983-6.924-3.9983-4.4005-.0048-7.9918 3.5817-7.9942 7.9942.0024 4.4077 3.5865 7.9918 7.9942 7.9942 2.2027.0 4.2018-.8978 5.6479-2.3439C196.1861 344.7844 197.0839 342.7853 197.0839 340.5826z"/><g><defs><path id="SVGID_13_" d="M194.7376 346.2329c-1.4461 1.4461-3.4452 2.3439-5.6479 2.3439-4.4077-.0024-7.9918-3.5865-7.9942-7.9942.0024-4.4125 3.5937-7.999 7.9942-7.9942 2.8443.0 5.497 1.5323 6.924 3.9983.6991 1.2067 1.0702 2.5881 1.0702 3.9959C197.0839 342.7853 196.1861 344.7844 194.7376 346.2329z"/></defs><clipPath id="SVGID_14_"><use xlink:href="#SVGID_13_" style="overflow:visible"/></clipPath><path style="clip-path:url(#SVGID_14_);fill:#fff" d="M190.0704 333.5691c-4.4005-.0048-7.9918 3.5817-7.9942 7.9942.0011 1.9547.7088 3.7452 1.8782 5.1354-1.7447-1.4674-2.8575-3.6631-2.8588-6.1161.0024-4.4125 3.5936-7.999 7.9942-7.9942 2.3802-1e-4 4.616 1.0834 6.1218 2.8788C193.7885 334.2701 191.9774 333.5691 190.0704 333.5691z"/><path style="opacity:.13;clip-path:url(#SVGID_14_);fill:#020202" d="M190.0704 333.5691c-4.4005-.0048-7.9918 3.5817-7.9942 7.9942.0011 1.9547.7088 3.7452 1.8782 5.1354-1.7447-1.4674-2.8575-3.6631-2.8588-6.1161.0024-4.4125 3.5936-7.999 7.9942-7.9942 2.3802-1e-4 4.616 1.0834 6.1218 2.8788C193.7885 334.2701 191.9774 333.5691 190.0704 333.5691z"/></g><g><defs><path id="SVGID_15_" d="M189.0898 318.7214c7.7763.0 15.0283 4.1826 18.926 10.915 1.9201 3.3136 2.9377 7.0988 2.9353 10.9462.0024 12.0643-9.8065 21.8636-21.8613 21.8612-12.0547.0024-21.8636-9.8065-21.8612-21.8612.0-6.0285 2.4516-11.4921 6.4116-15.452C177.5977 321.173 183.0612 318.7214 189.0898 318.7214zm7.9941 21.8612c0-1.4078-.3711-2.7892-1.0702-3.9959-1.4269-2.466-4.0797-3.9983-6.924-3.9983-4.4005-.0048-7.9918 3.5817-7.9942 7.9942.0024 4.4077 3.5865 7.9918 7.9942 7.9942 2.2027.0 4.2018-.8978 5.6479-2.3439C196.1861 344.7844 197.0839 342.7853 197.0839 340.5826z"/></defs><clipPath id="SVGID_16_"><use xlink:href="#SVGID_15_" style="overflow:visible"/></clipPath><path style="clip-path:url(#SVGID_16_);fill:#f1bc42" d="M172.6595 324.15c-3.96 3.96-6.4116 9.4235-6.4116 15.452-.0024 12.0547 9.8066 21.8636 21.8613 21.8612 12.0547.0024 21.8636-9.797 21.8613-21.8612.0024-3.8474-1.0151-7.6327-2.9353-10.9462-3.8977-6.7324-11.1497-10.9151-18.926-10.9151C182.0806 317.7407 176.6171 320.1924 172.6595 324.15z"/></g></g><rect x="198.8952" y="333.6497" style="fill:#f1bc42" width="122.6266" height="13.8671"/></g></g></svg></span><span class="text-uppercase font-weight-bold">Laravel 菜雞修煉場</span>
+	</a>
+	<div class="td-navbar-nav-scroll ml-md-auto" id="main_navbar">
+		<ul class="navbar-nav mt-2 mt-lg-0">
+			
+			
+			<li class="nav-item mr-4 mb-2 mb-lg-0">
+				
+				
+				
+				
+				
+				
+				
+				
+				<a class="nav-link" href="/zh/advanced/" ><i class='fas fa-book'></i><span>進階</span></a>
+			</li>
+			
+			<li class="nav-item mr-4 mb-2 mb-lg-0">
+				
+				
+				
+				
+				
+				
+				
+				
+				<a class="nav-link active" href="/zh/project-manage/" ><i class='fas fa-book'></i><span class="active">專案管理</span></a>
+			</li>
+			
+			
+			
+			<li class="nav-item dropdown d-none d-lg-block">
+				
+
+<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+	中文
+</a>
+<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+	
+	<a class="dropdown-item" href="/en/">EN</a>
+	
+</div>
+			</li>
+			
+		</ul>
+	</div>
+	<div class="navbar-nav d-none d-lg-block">
+
+
+
+<input
+  type="search"
+  class="form-control td-search-input"
+  placeholder="&#xf002; 搜尋"
+  aria-label="搜尋"
+  autocomplete="off"
+  
+  data-offline-search-index-json-src="/offline-search-index.8eb24d61ce714fc244ce2cce8caf0733.json"
+  data-offline-search-base-href="/"
+  data-offline-search-max-results="25"
+>
+
+</div>
+</nav>
+
+    </header>
+    <div class="container-fluid td-outer">
+      <div class="td-main">
+        <div class="row flex-xl-nowrap">
+          <div class="col-12 col-md-3 col-xl-2 td-sidebar d-print-none">
+            
+
+
+
+
+  
+
+
+<div id="td-sidebar-menu" class="td-sidebar__inner">
+  
+  <div id="content-mobile">
+  <form class="td-sidebar__search d-flex align-items-center">
+    
+
+
+
+<input
+  type="search"
+  class="form-control td-search-input"
+  placeholder="&#xf002; 搜尋"
+  aria-label="搜尋"
+  autocomplete="off"
+  
+  data-offline-search-index-json-src="/offline-search-index.8eb24d61ce714fc244ce2cce8caf0733.json"
+  data-offline-search-base-href="/"
+  data-offline-search-max-results="25"
+>
+
+
+    <button class="btn btn-link td-sidebar__toggle d-md-none p-0 ml-3 fas fa-bars" type="button" data-toggle="collapse" data-target="#td-section-nav" aria-controls="td-docs-nav" aria-expanded="false" aria-label="Toggle section navigation">
+    </button>
+  </form>
+  </div>
+  <div id="content-desktop"></div>
+  
+  <nav class="collapse td-sidebar-nav" id="td-section-nav">
+    
+    <div class="nav-item dropdown d-block d-lg-none">
+      
+
+<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+	中文
+</a>
+<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+	
+	<a class="dropdown-item" href="/en/">EN</a>
+	
+</div>
+    </div>
+    
+    
+    
+    
+    
+    <ul class="td-sidebar-nav__section pr-md-3 ul-0">
+      
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  <li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child active-path" id="m-zhproject-manage-li">
+    <a href="/zh/project-manage/" class="align-left pl-0 pr-2 td-sidebar-link td-sidebar-link__section tree-root" id="m-zhproject-manage"><span class="">專案管理</span></a>
+    
+      
+      <ul class="pr-md-3 ul-1">
+        
+          
+            
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  <li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child active-path" id="m-zhproject-managefile-structure-li">
+    <a href="/zh/project-manage/file-structure/" class="align-left pl-0 pr-2 td-sidebar-link td-sidebar-link__section" id="m-zhproject-managefile-structure"><span class="">檔案架構</span></a>
+    
+      
+      <ul class="pr-md-3 ul-2">
+        
+          
+            
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  <li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child active-path" id="m-zhproject-managefile-structurecombination-cache-manager-structure-principle-li">
+    <a href="/zh/project-manage/file-structure/combination-cache-manager-structure-principle/" class="align-left pl-0 pr-2 active td-sidebar-link td-sidebar-link__page" id="m-zhproject-managefile-structurecombination-cache-manager-structure-principle"><span class="td-sidebar-nav-active-item">Combination &amp; Cache 架構(2019)</span></a>
+    
+  </li>
+
+          
+        
+      </ul>
+    
+  </li>
+
+          
+        
+      </ul>
+    
+  </li>
+
+    </ul>
+  </nav>
+</div>
+
+
+
+
+          </div>
+          <div class="d-none d-xl-block col-xl-2 td-toc d-print-none">
+            
+  
+  
+  
+  
+  
+  <div class="td-page-meta ml-2 pb-1 pt-2 mb-0">
+  
+  
+  </div>
+
+
+
+
+
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#資料處理邏輯分層">資料處理邏輯分層</a>
+      <ul>
+        <li><a href="#架構圖">架構圖</a></li>
+        <li><a href="#架構說明">架構說明</a></li>
+        <li><a href="#架構存取限制">架構存取限制</a></li>
+      </ul>
+    </li>
+    <li><a href="#架構設計邏輯範例說明">架構設計邏輯範例說明</a>
+      <ul>
+        <li><a href="#a-資料控制結構-1">A. 資料控制結構</a></li>
+        <li><a href="#b獨立結構-1">B.獨立結構</a></li>
+      </ul>
+    </li>
+    <li><a href="#view-視圖-使用限制">View (視圖) 使用限制</a></li>
+  </ul>
+</nav>
+
+
+
+          </div>
+          <main class="col-12 col-md-9 col-xl-8 pl-md-5" role="main">
+            
+  
+
+            <nav aria-label="breadcrumb" class="d-none d-md-block d-print-none">
+	<ol class="breadcrumb spb-1">
+		
+
+
+
+
+
+
+
+
+
+
+<li class="breadcrumb-item" >
+	<a href="https://laravel-for-newbie.kejyun.com/zh/project-manage/">專案管理</a>
+</li>
+
+
+
+
+<li class="breadcrumb-item" >
+	<a href="https://laravel-for-newbie.kejyun.com/zh/project-manage/file-structure/">檔案架構</a>
+</li>
+
+
+
+
+<li class="breadcrumb-item active" aria-current="page">
+	<a href="https://laravel-for-newbie.kejyun.com/zh/project-manage/file-structure/combination-cache-manager-structure-principle/">Combination &amp; Cache 架構(2019)</a>
+</li>
+
+	</ol>
+</nav	>
+
+            
+<div class="td-content">
+	<h1>Combination &amp; Cache 架構設計準則(2019)</h1>
+		
+		<div class="lead">Combination &amp; Cache 架構設計準則(2019)</div>
+
+		
+		
+
+		
+		
+
+
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-1990193713845546"
+     data-ad-slot="5417606383"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+
+
+		
+		
+		<p>傳統的 MVC（Model, View, Controller） 框架，當 Controller 收到請求之後，我們會在 Controller 內直接透過 Model 去撈取資料庫的資料，並在 Controller 做資料驗證、資料整合、快取、商業邏輯判斷&hellip;等等的工作。</p>
+<p>當系統越來越大，會發現很多類似的商業邏輯的程式都散在各地，沒有辦法重複再利用，當程式需要異動或修改的時候，就要去搜尋所有程式碼，把許多相同商業邏輯的程式碼去做異動，但需要修改的地方若太多，往往會東漏西漏，導致系統出現錯誤，並造成往後開發的時間成本增加。</p>
+<p>所以我們會想要做到 <code>減少重複的程式碼</code>、<code>提高維護開發的效率</code>，所以將程式碼依照<code>分類</code>及<code>分層</code>抽出獨立控管，讓不同類型的程式專心處理自己相關的商業邏輯，讓開發維護更容易。</p>
+<p>隨著程式架構的演進會發展出更多不同的架構，所以這個設計架構準則也是會隨著時間做演進的。</p>
+
+  
+  <ins class="adsbygoogle"
+       style="display:block"
+       data-ad-client="ca-pub-1990193713845546"
+       data-ad-slot="1983708858"
+       data-ad-format="auto"
+       data-full-width-responsive="true"></ins>
+  <script>
+       (adsbygoogle = window.adsbygoogle || []).push({});
+  </script>
+
+<h2 id="資料處理邏輯分層">資料處理邏輯分層</h2>
+<h3 id="架構圖">架構圖</h3>
+<p><img src="../images/combination-cache-structure.png" alt="架構圖"></p>
+<h3 id="架構說明">架構說明</h3>
+<h4 id="a-資料控制結構">A. 資料控制結構</h4>
+<pre><code>* Controller (控制器：控制資料流程)
+    * ServiceManager (服務整合管理：組合管理不同 Service 的商業邏輯)
+        * Service (服務：處理商業邏輯)
+            * Repository (資源庫：資料表資料撈取邏輯)
+                * Model (資料庫模型：資料表設定)
+                    * Presenter (資料呈現：資料表資料格式呈現轉換)
+            * Combination（資料整合：整理 Repository 資料成資訊）
+    * CombinationManager（複合資料整合管理：整理多個 Service 的資料成資訊）
+* Checker (檢查器：根據 Controller 所需商業邏輯，驗證不同資料表欄位資料)
+    * Validator (驗證器：資料表欄位資料驗證)
+</code></pre><table>
+<thead>
+<tr>
+<th>結構名稱</th>
+<th>說明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Controller (控制器)</td>
+<td>控制資料流程，控制要使用哪些 Service 或 ServiceManager 的商業邏輯，去組合出使用者請求需要的資料，並做資料的資料交易控制 (transaction) ，並使用 Checker 去檢查任何使用者傳進來的資料，確保資料的正確性</td>
+</tr>
+<tr>
+<td>ServiceManager (服務整合管理)</td>
+<td>協助 Controller 組合不同 Service 的資料成商業邏輯</td>
+</tr>
+<tr>
+<td>Service (服務)</td>
+<td>處理商業邏輯，組合不同的 Repository 資料成商業邏輯，提供 Controller 或 ServiceManager 存取</td>
+</tr>
+<tr>
+<td>Repository (資源庫)</td>
+<td>資料表資料撈取邏輯，撈取屬於自己 Model 不同條件下的資料，提供 Service 存取</td>
+</tr>
+<tr>
+<td>Model (資料庫模型)</td>
+<td>資料庫模型，資料表存取相關設定</td>
+</tr>
+<tr>
+<td>Presenter (資料呈現)</td>
+<td>資料呈現，協助 Model 做資料呈現轉換</td>
+</tr>
+<tr>
+<td>Checker (檢查器)</td>
+<td>協助 Controller 做資料驗證，在資料進入到程式邏輯前，都需要經過 Checker 將資料格式做驗證</td>
+</tr>
+<tr>
+<td>Validator (驗證器)</td>
+<td>協助 Checker 做資料驗證，Validator 只能驗證單一 Model 資料</td>
+</tr>
+<tr>
+<td>CombinationManager (複合資料整合管理)</td>
+<td>協助整理不同 Service 的複合式資料，若有資料的邏輯判斷需要不同的資料來源，則由 CombinationManager 負責整合處理</td>
+</tr>
+<tr>
+<td>Combination （資料整合）</td>
+<td>協助整理 Repository 資料成資訊</td>
+</tr>
+</tbody>
+</table>
+<h4 id="b獨立結構">B.獨立結構</h4>
+<pre><code>* CacheManager (快取：管理資源快取鍵值及清除快取)
+* Constant (常數：定義資料狀態名稱)
+* Support (支援：協助處理獨立邏輯資料處理)
+* ExceptionCode (例外代碼：例外錯誤代碼定義)
+</code></pre><table>
+<thead>
+<tr>
+<th>結構名稱</th>
+<th>說明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CacheManager (快取)</td>
+<td>協助專案資料做快取資料的控制，可以在任何程式邏輯複雜的地方做快取存取控制，並統一清除快取</td>
+</tr>
+<tr>
+<td>Constant (常數)</td>
+<td>定義並命名所有資料狀態，確保資料值做異動時，不會影響程式邏輯</td>
+</tr>
+<tr>
+<td>Support (支援)</td>
+<td>協助處理獨立程式邏輯，邏輯沒有被其他任何的函式綁定，可以獨立完成</td>
+</tr>
+<tr>
+<td>ExceptionCode (例外代碼)</td>
+<td>定義例外代碼，可以統一管控當例外發生錯誤時，回傳的錯誤代碼</td>
+</tr>
+</tbody>
+</table>
+
+  
+  <ins class="adsbygoogle"
+       style="display:block"
+       data-ad-client="ca-pub-1990193713845546"
+       data-ad-slot="1983708858"
+       data-ad-format="auto"
+       data-full-width-responsive="true"></ins>
+  <script>
+       (adsbygoogle = window.adsbygoogle || []).push({});
+  </script>
+
+<h3 id="架構存取限制">架構存取限制</h3>
+<ol>
+<li>不能跨 2 階層以上存取
+<ul>
+<li>Controller 不能存取 Repository</li>
+<li>Controller 不能存取 Validator</li>
+<li>Service 不能存取 Model</li>
+</ul>
+</li>
+<li>低階層的不能存取高階層的資料
+<ul>
+<li>Model 不能存取 Repository</li>
+<li>Repository 不能存取 Service</li>
+<li>Validator 不能存取 Checker</li>
+</ul>
+</li>
+<li>同一個資料類型，不能互相呼叫
+<ul>
+<li>避免同一類型類別呼叫，造成 new 物件的時候有無窮迴圈
+<ul>
+<li>PostService 存取 UserService，UserService 存取 PostsService 造成無窮迴圈</li>
+</ul>
+</li>
+<li>ServiceManager 不能呼叫 ServiceManager</li>
+<li>Service 不能呼叫 Service</li>
+<li>Checker 不能呼叫 Checker</li>
+<li>Validator 不能呼叫 Validator</li>
+<li>Repository 不能呼叫 Repository</li>
+<li>CacheManager 不能呼叫 CacheManager</li>
+</ul>
+</li>
+<li>獨立結構可以在任何一階層去呼叫</li>
+</ol>
+
+  
+  <ins class="adsbygoogle"
+       style="display:block"
+       data-ad-client="ca-pub-1990193713845546"
+       data-ad-slot="1983708858"
+       data-ad-format="auto"
+       data-full-width-responsive="true"></ins>
+  <script>
+       (adsbygoogle = window.adsbygoogle || []).push({});
+  </script>
+
+<h2 id="架構設計邏輯範例說明">架構設計邏輯範例說明</h2>
+<h3 id="a-資料控制結構-1">A. 資料控制結構</h3>
+<h4 id="controller-控制器">Controller (控制器)</h4>
+<table>
+<thead>
+<tr>
+<th>項目</th>
+<th>說明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>用途</td>
+<td>控制資料流程</td>
+</tr>
+<tr>
+<td>可以存取結構</td>
+<td><code>Checker</code>、<code>ServiceManager</code>、<code>Service</code>、<code>DB transaction</code>，<code>所有獨立結構</code></td>
+</tr>
+<tr>
+<td>可以被存取結構</td>
+<td>無</td>
+</tr>
+</tbody>
+</table>
+<p>處理 HTTP 請求的入口，依照需求呼叫 ServiceManager 或 Service 去做資料的存取，大部分情況呼叫 Service 去組合需要的資料就好，若相同的組合邏輯在不同的 Controller 都有用到，那就使用 ServiceManager 去組合不同的 Service</p>
+<p>要確保所有 Service 商業邏輯都正確跑完才允許對資料做異動，並避免 Transaction 在 Controller 及 Service 被重複呼叫，導致無法正確鎖定資料狀態，所以使用 Controller 當作資料交易（Transaction）的控制點</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="color:#ce5c00;font-weight:bold">&lt;?</span><span style="color:#000">php</span>
+
+<span style="color:#204a87;font-weight:bold">class</span> <span style="color:#000">PostController</span> <span style="color:#204a87;font-weight:bold">extends</span> <span style="color:#000">Controller</span>
+<span style="color:#000;font-weight:bold">{</span>
+    <span style="color:#204a87;font-weight:bold">public</span> <span style="color:#204a87;font-weight:bold">function</span> <span style="color:#000">__construct</span><span style="color:#000;font-weight:bold">(</span>
+        <span style="color:#000">PostServiceManager</span> <span style="color:#000">$PostServiceManager</span><span style="color:#000;font-weight:bold">,</span>
+        <span style="color:#000">PostService</span> <span style="color:#000">$PostService</span><span style="color:#000;font-weight:bold">,</span>
+        <span style="color:#000">CommentService</span> <span style="color:#000">$CommentService</span><span style="color:#000;font-weight:bold">,</span>
+        <span style="color:#000">PostChecker</span> <span style="color:#000">$PostChecker</span>
+    <span style="color:#000;font-weight:bold">)</span>
+    <span style="color:#000;font-weight:bold">{</span>
+        <span style="color:#000">$this</span><span style="color:#ce5c00;font-weight:bold">-&gt;</span><span style="color:#c4a000">PostServiceManager</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000">$PostServiceManager</span><span style="color:#000;font-weight:bold">;</span>
+        <span style="color:#000">$this</span><span style="color:#ce5c00;font-weight:bold">-&gt;</span><span style="color:#c4a000">PostService</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000">$PostService</span><span style="color:#000;font-weight:bold">;</span>
+        <span style="color:#000">$this</span><span style="color:#ce5c00;font-weight:bold">-&gt;</span><span style="color:#c4a000">CommentService</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000">$CommentService</span><span style="color:#000;font-weight:bold">;</span>
+        <span style="color:#000">$this</span><span style="color:#ce5c00;font-weight:bold">-&gt;</span><span style="color:#c4a000">PostChecker</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000">$PostChecker</span><span style="color:#000;font-weight:bold">;</span>
+    <span style="color:#000;font-weight:bold">}</span>
+
+    <span style="color:#8f5902;font-style:italic">// 顯示文章
+</span><span style="color:#8f5902;font-style:italic"></span>    <span style="color:#204a87;font-weight:bold">public</span> <span style="color:#204a87;font-weight:bold">function</span> <span style="color:#000">show</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">$post_id</span><span style="color:#000;font-weight:bold">)</span> <span style="color:#000;font-weight:bold">{</span>
+        <span style="color:#204a87;font-weight:bold">try</span> <span style="color:#000;font-weight:bold">{</span>
+            <span style="color:#8f5902;font-style:italic">// 驗證資料
+</span><span style="color:#8f5902;font-style:italic"></span>            <span style="color:#000">$input</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000;font-weight:bold">[</span>
+                <span style="color:#4e9a06">&#39;post_id&#39;</span> <span style="color:#ce5c00;font-weight:bold">=&gt;</span> <span style="color:#000">$post_id</span>
+            <span style="color:#000;font-weight:bold">];</span>
+            <span style="color:#000">$this</span><span style="color:#ce5c00;font-weight:bold">-&gt;</span><span style="color:#c4a000">PostChecker</span><span style="color:#ce5c00;font-weight:bold">-&gt;</span><span style="color:#c4a000">checkShow</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">$input</span><span style="color:#000;font-weight:bold">);</span>
+
+            <span style="color:#8f5902;font-style:italic">// 撈取文章
+</span><span style="color:#8f5902;font-style:italic"></span>            <span style="color:#000">$Post</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000">$this</span><span style="color:#ce5c00;font-weight:bold">-&gt;</span><span style="color:#c4a000">PostServiceManager</span><span style="color:#ce5c00;font-weight:bold">-&gt;</span><span style="color:#c4a000">findPost</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">$post_id</span><span style="color:#000;font-weight:bold">);</span>
+
+            <span style="color:#8f5902;font-style:italic">// 撈取文章留言
+</span><span style="color:#8f5902;font-style:italic"></span>            <span style="color:#000">$Comment</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000">$this</span><span style="color:#ce5c00;font-weight:bold">-&gt;</span><span style="color:#c4a000">CommentService</span><span style="color:#ce5c00;font-weight:bold">-&gt;</span><span style="color:#c4a000">getCommentByPostId</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">post_id</span><span style="color:#000;font-weight:bold">);</span>
+        <span style="color:#000;font-weight:bold">}</span> <span style="color:#204a87;font-weight:bold">catch</span> <span style="color:#000;font-weight:bold">(</span><span style="color:#000">Exception</span> <span style="color:#000">$exception</span><span style="color:#000;font-weight:bold">)</span> <span style="color:#000;font-weight:bold">{</span>
+            <span style="color:#204a87;font-weight:bold">throw</span> <span style="color:#000">$exception</span>
+        <span style="color:#000;font-weight:bold">}</span>
+    <span style="color:#000;font-weight:bold">}</span>
+
+    <span style="color:#8f5902;font-style:italic">// 更新文章
+</span><span style="color:#8f5902;font-style:italic"></span>    <span style="color:#204a87;font-weight:bold">public</span> <span style="color:#204a87;font-weight:bold">function</span> <span style="color:#000">update</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">$post_id</span><span style="color:#000;font-weight:bold">)</span> <span style="color:#000;font-weight:bold">{</span>
+        <span style="color:#204a87;font-weight:bold">try</span> <span style="color:#000;font-weight:bold">{</span>
+            <span style="color:#8f5902;font-style:italic">// 驗證資料
+</span><span style="color:#8f5902;font-style:italic"></span>            <span style="color:#000">$input</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000">request</span><span style="color:#000;font-weight:bold">()</span><span style="color:#ce5c00;font-weight:bold">-&gt;</span><span style="color:#c4a000">all</span><span style="color:#000;font-weight:bold">();</span>
+            <span style="color:#000">$input</span><span style="color:#000;font-weight:bold">[</span><span style="color:#4e9a06">&#39;post_id&#39;</span><span style="color:#000;font-weight:bold">]</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000">$post_id</span><span style="color:#000;font-weight:bold">;</span>
+            <span style="color:#000">$this</span><span style="color:#ce5c00;font-weight:bold">-&gt;</span><span style="color:#c4a000">PostChecker</span><span style="color:#ce5c00;font-weight:bold">-&gt;</span><span style="color:#c4a000">checkUpdate</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">$input</span><span style="color:#000;font-weight:bold">);</span>
+
+            <span style="color:#8f5902;font-style:italic">// 交易開始
+</span><span style="color:#8f5902;font-style:italic"></span>            <span style="color:#000">DB</span><span style="color:#ce5c00;font-weight:bold">::</span><span style="color:#c4a000">beginTransaction</span><span style="color:#000;font-weight:bold">();</span>
+
+            <span style="color:#8f5902;font-style:italic">// 更新文章
+</span><span style="color:#8f5902;font-style:italic"></span>            <span style="color:#000">$Post</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000">$this</span><span style="color:#ce5c00;font-weight:bold">-&gt;</span><span style="color:#c4a000">PostService</span><span style="color:#ce5c00;font-weight:bold">-&gt;</span><span style="color:#c4a000">update</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">$post_id</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">$input</span><span style="color:#000;font-weight:bold">);</span>
+
+            <span style="color:#8f5902;font-style:italic">// 交易結束
+</span><span style="color:#8f5902;font-style:italic"></span>            <span style="color:#000">DB</span><span style="color:#ce5c00;font-weight:bold">::</span><span style="color:#c4a000">commit</span><span style="color:#000;font-weight:bold">();</span>
+        <span style="color:#000;font-weight:bold">}</span> <span style="color:#204a87;font-weight:bold">catch</span> <span style="color:#000;font-weight:bold">(</span><span style="color:#000">Exception</span> <span style="color:#000">$exception</span><span style="color:#000;font-weight:bold">)</span> <span style="color:#000;font-weight:bold">{</span>
+            <span style="color:#8f5902;font-style:italic">// 交易失敗
+</span><span style="color:#8f5902;font-style:italic"></span>            <span style="color:#000">DB</span><span style="color:#ce5c00;font-weight:bold">::</span><span style="color:#c4a000">rollBack</span><span style="color:#000;font-weight:bold">();</span>
+            <span style="color:#204a87;font-weight:bold">throw</span> <span style="color:#000">$exception</span>
+        <span style="color:#000;font-weight:bold">}</span>
+    <span style="color:#000;font-weight:bold">}</span>
+<span style="color:#000;font-weight:bold">}</span>
+</code></pre></div>
+  
+  <ins class="adsbygoogle"
+       style="display:block"
+       data-ad-client="ca-pub-1990193713845546"
+       data-ad-slot="1983708858"
+       data-ad-format="auto"
+       data-full-width-responsive="true"></ins>
+  <script>
+       (adsbygoogle = window.adsbygoogle || []).push({});
+  </script>
+
+<h4 id="servicemanager-服務整合管理">ServiceManager (服務整合管理)</h4>
+<table>
+<thead>
+<tr>
+<th>項目</th>
+<th>說明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>用途</td>
+<td>組合管理不同 Service 的商業邏輯</td>
+</tr>
+<tr>
+<td>可以存取結構</td>
+<td><code>Service</code>、<code>所有獨立結構</code></td>
+</tr>
+<tr>
+<td>可以被存取結構</td>
+<td><code>Controller</code></td>
+</tr>
+</tbody>
+</table>
+<p>使用不同 Service 撈取資料，將不同資料組合成商業邏輯，供 Controller 做存取</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="color:#ce5c00;font-weight:bold">&lt;?</span><span style="color:#000">php</span>
+
+<span style="color:#204a87;font-weight:bold">class</span> <span style="color:#000">PostServiceManager</span> <span style="color:#000;font-weight:bold">{</span>
+    <span style="color:#204a87;font-weight:bold">public</span> <span style="color:#204a87;font-weight:bold">function</span> <span style="color:#000">__construct</span><span style="color:#000;font-weight:bold">(</span>
+        <span style="color:#000">PostService</span> <span style="color:#000">$PostService</span><span style="color:#000;font-weight:bold">,</span>
+        <span style="color:#000">UserService</span> <span style="color:#000">$UserService</span>
+    <span style="color:#000;font-weight:bold">)</span>
+    <span style="color:#000;font-weight:bold">{</span>
+        <span style="color:#000">$this</span><span style="color:#ce5c00;font-weight:bold">-&gt;</span><span style="color:#c4a000">PostService</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000">$PostService</span><span style="color:#000;font-weight:bold">;</span>
+        <span style="color:#000">$this</span><span style="color:#ce5c00;font-weight:bold">-&gt;</span><span style="color:#c4a000">UserService</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000">$UserService</span><span style="color:#000;font-weight:bold">;</span>
+    <span style="color:#000;font-weight:bold">}</span>
+
+    <span style="color:#8f5902;font-style:italic">// 撈取文章資料
+</span><span style="color:#8f5902;font-style:italic"></span>    <span style="color:#204a87;font-weight:bold">public</span> <span style="color:#204a87;font-weight:bold">function</span> <span style="color:#000">findPost</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">$post_id</span><span style="color:#000;font-weight:bold">){</span>
+        <span style="color:#204a87;font-weight:bold">try</span> <span style="color:#000;font-weight:bold">{</span>
+            <span style="color:#8f5902;font-style:italic">// 撈取文章
+</span><span style="color:#8f5902;font-style:italic"></span>            <span style="color:#000">$Post</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000">$this</span><span style="color:#ce5c00;font-weight:bold">-&gt;</span><span style="color:#c4a000">PostService</span><span style="color:#ce5c00;font-weight:bold">-&gt;</span><span style="color:#c4a000">findPost</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">$post_id</span><span style="color:#000;font-weight:bold">);</span>
+            <span style="color:#8f5902;font-style:italic">// 撈取文章作者資料
+</span><span style="color:#8f5902;font-style:italic"></span>            <span style="color:#000">$user_id</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000">$Post</span><span style="color:#ce5c00;font-weight:bold">-&gt;</span><span style="color:#c4a000">user_id</span><span style="color:#000;font-weight:bold">;</span>
+            <span style="color:#000">$Post</span><span style="color:#ce5c00;font-weight:bold">-&gt;</span><span style="color:#c4a000">user</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000">$this</span><span style="color:#ce5c00;font-weight:bold">-&gt;</span><span style="color:#c4a000">UserService</span><span style="color:#ce5c00;font-weight:bold">-&gt;</span><span style="color:#c4a000">findUser</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">$user_id</span><span style="color:#000;font-weight:bold">);</span>
+
+            <span style="color:#204a87;font-weight:bold">return</span> <span style="color:#000">$Post</span><span style="color:#000;font-weight:bold">;</span>
+        <span style="color:#000;font-weight:bold">}</span> <span style="color:#204a87;font-weight:bold">catch</span> <span style="color:#000;font-weight:bold">(</span><span style="color:#000">Exception</span> <span style="color:#000">$exception</span><span style="color:#000;font-weight:bold">)</span> <span style="color:#000;font-weight:bold">{</span>
+            <span style="color:#204a87;font-weight:bold">throw</span> <span style="color:#000">$exception</span>
+        <span style="color:#000;font-weight:bold">}</span>
+    <span style="color:#000;font-weight:bold">}</span>
+<span style="color:#000;font-weight:bold">}</span>
+</code></pre></div><h4 id="service-服務">Service (服務)</h4>
+<table>
+<thead>
+<tr>
+<th>項目</th>
+<th>說明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>用途</td>
+<td>處理商業邏輯</td>
+</tr>
+<tr>
+<td>可以存取結構</td>
+<td><code>Repository</code>、<code>所有獨立結構</code></td>
+</tr>
+<tr>
+<td>可以被存取結構</td>
+<td><code>Controller</code>、<code>ServiceManager</code></td>
+</tr>
+</tbody>
+</table>
+<p>使用不同的 Repository 撈取資料，將不同資料組合成商業邏輯</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="color:#ce5c00;font-weight:bold">&lt;?</span><span style="color:#000">php</span>
+
+<span style="color:#204a87;font-weight:bold">class</span> <span style="color:#000">PostService</span> <span style="color:#000;font-weight:bold">{</span>
+    <span style="color:#204a87;font-weight:bold">public</span> <span style="color:#204a87;font-weight:bold">function</span> <span style="color:#000">__construct</span><span style="color:#000;font-weight:bold">(</span>
+        <span style="color:#000">PostRepository</span> <span style="color:#000">$PostRepository</span><span style="color:#000;font-weight:bold">,</span>
+        <span style="color:#000">PostTagRepository</span> <span style="color:#000">$PostTagRepository</span>
+    <span style="color:#000;font-weight:bold">)</span>
+    <span style="color:#000;font-weight:bold">{</span>
+        <span style="color:#000">$this</span><span style="color:#ce5c00;font-weight:bold">-&gt;</span><span style="color:#c4a000">PostRepository</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000">$PostRepository</span><span style="color:#000;font-weight:bold">;</span>
+        <span style="color:#000">$this</span><span style="color:#ce5c00;font-weight:bold">-&gt;</span><span style="color:#c4a000">PostTagRepository</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000">$PostTagRepository</span><span style="color:#000;font-weight:bold">;</span>
+    <span style="color:#000;font-weight:bold">}</span>
+
+    <span style="color:#8f5902;font-style:italic">// 撈取文章
+</span><span style="color:#8f5902;font-style:italic"></span>    <span style="color:#204a87;font-weight:bold">public</span> <span style="color:#204a87;font-weight:bold">function</span> <span style="color:#000">findPost</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">$post_id</span><span style="color:#000;font-weight:bold">)</span> <span style="color:#000;font-weight:bold">{</span>
+        <span style="color:#204a87;font-weight:bold">try</span> <span style="color:#000;font-weight:bold">{</span>
+            <span style="color:#8f5902;font-style:italic">// 撈取文章
+</span><span style="color:#8f5902;font-style:italic"></span>            <span style="color:#000">$Post</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000">$this</span><span style="color:#ce5c00;font-weight:bold">-&gt;</span><span style="color:#c4a000">PostRepository</span><span style="color:#ce5c00;font-weight:bold">-&gt;</span><span style="color:#c4a000">find</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">$post_id</span><span style="color:#000;font-weight:bold">);</span>
+            <span style="color:#8f5902;font-style:italic">// 撈取文章標籤
+</span><span style="color:#8f5902;font-style:italic"></span>            <span style="color:#000">$Tag</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000">$this</span><span style="color:#ce5c00;font-weight:bold">-&gt;</span><span style="color:#c4a000">PostTagRepository</span><span style="color:#ce5c00;font-weight:bold">-&gt;</span><span style="color:#c4a000">getByPostId</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">$post_id</span><span style="color:#000;font-weight:bold">);</span>
+
+            <span style="color:#204a87;font-weight:bold">return</span> <span style="color:#000;font-weight:bold">[</span><span style="color:#000">$Post</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">$Tag</span><span style="color:#000;font-weight:bold">];</span>
+        <span style="color:#000;font-weight:bold">}</span> <span style="color:#204a87;font-weight:bold">catch</span> <span style="color:#000;font-weight:bold">(</span><span style="color:#000">Exception</span> <span style="color:#000">$exception</span><span style="color:#000;font-weight:bold">)</span> <span style="color:#000;font-weight:bold">{</span>
+            <span style="color:#204a87;font-weight:bold">throw</span> <span style="color:#000">$exception</span>
+        <span style="color:#000;font-weight:bold">}</span>
+    <span style="color:#000;font-weight:bold">}</span>
+<span style="color:#000;font-weight:bold">}</span>
+</code></pre></div>
+  
+  <ins class="adsbygoogle"
+       style="display:block"
+       data-ad-client="ca-pub-1990193713845546"
+       data-ad-slot="1983708858"
+       data-ad-format="auto"
+       data-full-width-responsive="true"></ins>
+  <script>
+       (adsbygoogle = window.adsbygoogle || []).push({});
+  </script>
+
+<h4 id="repository-資源庫">Repository (資源庫)</h4>
+<table>
+<thead>
+<tr>
+<th>項目</th>
+<th>說明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>用途</td>
+<td>資料表資料撈取邏輯</td>
+</tr>
+<tr>
+<td>可以存取結構</td>
+<td><code>Model</code>、<code>所有獨立結構</code></td>
+</tr>
+<tr>
+<td>可以被存取結構</td>
+<td><code>Service</code></td>
+</tr>
+</tbody>
+</table>
+<p>撈取特定 Model 資料，像 <code>PostRepository</code> 可以存取 <code>Post</code> Model (模型) 的 <em>基本資料</em>，並使用不同條件撈取 Model 的資料，供 Service 做存取</p>
+<p>也可以使用 <code>PostRecommendRepository</code> 存取 <code>Post</code> Model (模型) 的 <em>推薦資料</em></p>
+<p>同一個 Model (模型) 可以用不同的 Repository 去呼叫，但同一 Repository 只能有一個 Model (模型)</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="color:#ce5c00;font-weight:bold">&lt;?</span><span style="color:#000">php</span>
+
+<span style="color:#204a87;font-weight:bold">class</span> <span style="color:#000">PostRepository</span> <span style="color:#000;font-weight:bold">{</span>
+    <span style="color:#204a87;font-weight:bold">public</span> <span style="color:#204a87;font-weight:bold">function</span> <span style="color:#000">__construct</span><span style="color:#000;font-weight:bold">(</span>
+        <span style="color:#000">Post</span> <span style="color:#000">$Post</span>
+    <span style="color:#000;font-weight:bold">)</span>
+    <span style="color:#000;font-weight:bold">{</span>
+        <span style="color:#000">$this</span><span style="color:#ce5c00;font-weight:bold">-&gt;</span><span style="color:#c4a000">Post</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000">$Post</span><span style="color:#000;font-weight:bold">;</span>
+    <span style="color:#000;font-weight:bold">}</span>
+
+    <span style="color:#204a87;font-weight:bold">public</span> <span style="color:#204a87;font-weight:bold">function</span> <span style="color:#000">find</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">$post_id</span><span style="color:#000;font-weight:bold">)</span> <span style="color:#000;font-weight:bold">{</span>
+        <span style="color:#204a87;font-weight:bold">try</span> <span style="color:#000;font-weight:bold">{</span>
+
+            <span style="color:#8f5902;font-style:italic">// 撈取資料庫文章資料
+</span><span style="color:#8f5902;font-style:italic"></span>            <span style="color:#000">$Post</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000">$this</span><span style="color:#ce5c00;font-weight:bold">-&gt;</span><span style="color:#c4a000">Post</span><span style="color:#ce5c00;font-weight:bold">-&gt;</span><span style="color:#c4a000">find</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">$post_id</span><span style="color:#000;font-weight:bold">);</span>
+
+            <span style="color:#204a87;font-weight:bold">return</span> <span style="color:#000">$Post</span><span style="color:#000;font-weight:bold">;</span>
+        <span style="color:#000;font-weight:bold">}</span> <span style="color:#204a87;font-weight:bold">catch</span> <span style="color:#000;font-weight:bold">(</span><span style="color:#000">Exception</span> <span style="color:#000">$exception</span><span style="color:#000;font-weight:bold">)</span> <span style="color:#000;font-weight:bold">{</span>
+            <span style="color:#204a87;font-weight:bold">throw</span> <span style="color:#000">$exception</span>
+        <span style="color:#000;font-weight:bold">}</span>
+    <span style="color:#000;font-weight:bold">}</span>
+
+    <span style="color:#204a87;font-weight:bold">public</span> <span style="color:#204a87;font-weight:bold">function</span> <span style="color:#000">findLatestPost</span><span style="color:#000;font-weight:bold">()</span> <span style="color:#000;font-weight:bold">{</span>
+        <span style="color:#204a87;font-weight:bold">try</span> <span style="color:#000;font-weight:bold">{</span>
+            <span style="color:#8f5902;font-style:italic">// 撈取資料庫文章資料
+</span><span style="color:#8f5902;font-style:italic"></span>            <span style="color:#000">$Post</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000">$this</span><span style="color:#ce5c00;font-weight:bold">-&gt;</span><span style="color:#c4a000">Post</span>
+                <span style="color:#ce5c00;font-weight:bold">-&gt;</span><span style="color:#c4a000">order</span><span style="color:#000;font-weight:bold">(</span><span style="color:#4e9a06">&#39;created_at&#39;</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#4e9a06">&#39;desc&#39;</span><span style="color:#000;font-weight:bold">)</span>
+                <span style="color:#ce5c00;font-weight:bold">-&gt;</span><span style="color:#c4a000">first</span><span style="color:#000;font-weight:bold">();</span>
+
+            <span style="color:#204a87;font-weight:bold">return</span> <span style="color:#000">$Post</span><span style="color:#000;font-weight:bold">;</span>
+        <span style="color:#000;font-weight:bold">}</span> <span style="color:#204a87;font-weight:bold">catch</span> <span style="color:#000;font-weight:bold">(</span><span style="color:#000">Exception</span> <span style="color:#000">$exception</span><span style="color:#000;font-weight:bold">)</span> <span style="color:#000;font-weight:bold">{</span>
+            <span style="color:#204a87;font-weight:bold">throw</span> <span style="color:#000">$exception</span>
+        <span style="color:#000;font-weight:bold">}</span>
+    <span style="color:#000;font-weight:bold">}</span>
+<span style="color:#000;font-weight:bold">}</span>
+</code></pre></div><h4 id="model-資料庫模型">Model (資料庫模型)</h4>
+<table>
+<thead>
+<tr>
+<th>項目</th>
+<th>說明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>用途</td>
+<td>資料表設定</td>
+</tr>
+<tr>
+<td>可以存取結構</td>
+<td><code>所有獨立結構</code></td>
+</tr>
+<tr>
+<td>可以被存取結構</td>
+<td><code>Repository</code></td>
+</tr>
+</tbody>
+</table>
+<p>Eloquent 存取資料表相關設定，使用 Eloquent 直接存取資料表資料</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="color:#ce5c00;font-weight:bold">&lt;?</span><span style="color:#000">php</span>
+
+<span style="color:#204a87;font-weight:bold">class</span> <span style="color:#000">Post</span> <span style="color:#204a87;font-weight:bold">extends</span> <span style="color:#000">Model</span>
+<span style="color:#000;font-weight:bold">{</span>
+    <span style="color:#204a87;font-weight:bold">protected</span> <span style="color:#000">$table</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#4e9a06">&#39;post&#39;</span><span style="color:#000;font-weight:bold">;</span>
+
+    <span style="color:#204a87;font-weight:bold">protected</span> <span style="color:#000">$fillable</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000;font-weight:bold">[];</span>
+
+    <span style="color:#204a87;font-weight:bold">protected</span> <span style="color:#000">$primaryKey</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#4e9a06">&#39;id&#39;</span><span style="color:#000;font-weight:bold">;</span>
+
+    <span style="color:#204a87;font-weight:bold">protected</span> <span style="color:#000">$dates</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000;font-weight:bold">[</span><span style="color:#4e9a06">&#39;created_at&#39;</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#4e9a06">&#39;updated_at&#39;</span><span style="color:#000;font-weight:bold">];</span>
+
+    <span style="color:#204a87;font-weight:bold">protected</span> <span style="color:#000">$presenter</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000">PostPresenter</span><span style="color:#ce5c00;font-weight:bold">::</span><span style="color:#c4a000">class</span><span style="color:#000;font-weight:bold">;</span>
+<span style="color:#000;font-weight:bold">}</span>
+</code></pre></div>
+  
+  <ins class="adsbygoogle"
+       style="display:block"
+       data-ad-client="ca-pub-1990193713845546"
+       data-ad-slot="1983708858"
+       data-ad-format="auto"
+       data-full-width-responsive="true"></ins>
+  <script>
+       (adsbygoogle = window.adsbygoogle || []).push({});
+  </script>
+
+<h4 id="presenter-資料呈現">Presenter (資料呈現)</h4>
+<table>
+<thead>
+<tr>
+<th>項目</th>
+<th>說明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>用途</td>
+<td>資料表資料格式呈現轉換</td>
+</tr>
+<tr>
+<td>可以存取結構</td>
+<td><code>所有獨立結構</code></td>
+</tr>
+<tr>
+<td>可以被存取結構</td>
+<td><code>Model</code></td>
+</tr>
+</tbody>
+</table>
+<p>提供 Model 的資料用其他方式呈現</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="color:#ce5c00;font-weight:bold">&lt;?</span><span style="color:#000">php</span>
+
+<span style="color:#204a87;font-weight:bold">class</span> <span style="color:#000">PostPresenter</span> <span style="color:#204a87;font-weight:bold">extends</span> <span style="color:#000">Presenter</span>
+<span style="color:#000;font-weight:bold">{</span>
+    <span style="color:#204a87;font-weight:bold">public</span> <span style="color:#204a87;font-weight:bold">function</span> <span style="color:#000">created_at_human_time</span><span style="color:#000;font-weight:bold">()</span>
+    <span style="color:#000;font-weight:bold">{</span>
+        <span style="color:#204a87;font-weight:bold">return</span> <span style="color:#000">$this</span><span style="color:#ce5c00;font-weight:bold">-&gt;</span><span style="color:#c4a000">created_at</span><span style="color:#ce5c00;font-weight:bold">-&gt;</span><span style="color:#c4a000">diffForHumans</span><span style="color:#000;font-weight:bold">();</span>
+    <span style="color:#000;font-weight:bold">}</span>
+<span style="color:#000;font-weight:bold">}</span>
+</code></pre></div><h4 id="checker-檢查器">Checker (檢查器)</h4>
+<table>
+<thead>
+<tr>
+<th>項目</th>
+<th>說明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>用途</td>
+<td>根據 Controller 所需商業邏輯，驗證不同資料表欄位資料</td>
+</tr>
+<tr>
+<td>可以存取結構</td>
+<td><code>Validator</code>、<code>所有獨立結構</code></td>
+</tr>
+<tr>
+<td>可以被存取結構</td>
+<td><code>Controller</code></td>
+</tr>
+</tbody>
+</table>
+<p>協助 Controller 驗證不同資料表資料的正確性，若驗證錯誤則丟處例外，Controller 根據例外代碼去做處理</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="color:#ce5c00;font-weight:bold">&lt;?</span><span style="color:#000">php</span>
+
+<span style="color:#204a87;font-weight:bold">class</span> <span style="color:#000">PostValidator</span> <span style="color:#000;font-weight:bold">{</span>
+    <span style="color:#204a87;font-weight:bold">public</span> <span style="color:#204a87;font-weight:bold">function</span> <span style="color:#000">checkFindPost</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">$input</span><span style="color:#000;font-weight:bold">){</span>
+        <span style="color:#8f5902;font-style:italic">// 驗證文章資料
+</span><span style="color:#8f5902;font-style:italic"></span>        <span style="color:#000">$this</span><span style="color:#ce5c00;font-weight:bold">-&gt;</span><span style="color:#c4a000">PostValidator</span><span style="color:#ce5c00;font-weight:bold">-&gt;</span><span style="color:#c4a000">validatePostId</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">$input</span><span style="color:#000;font-weight:bold">);</span>
+        <span style="color:#000">$this</span><span style="color:#ce5c00;font-weight:bold">-&gt;</span><span style="color:#c4a000">PostValidator</span><span style="color:#ce5c00;font-weight:bold">-&gt;</span><span style="color:#c4a000">validatePostContent</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">$input</span><span style="color:#000;font-weight:bold">);</span>
+
+        <span style="color:#8f5902;font-style:italic">// 驗證會員資料
+</span><span style="color:#8f5902;font-style:italic"></span>        <span style="color:#000">$this</span><span style="color:#ce5c00;font-weight:bold">-&gt;</span><span style="color:#c4a000">MemberValidator</span><span style="color:#ce5c00;font-weight:bold">-&gt;</span><span style="color:#c4a000">validateMemberId</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">$input</span><span style="color:#000;font-weight:bold">);</span>
+    <span style="color:#000;font-weight:bold">}</span>
+<span style="color:#000;font-weight:bold">}</span>
+</code></pre></div><h4 id="validator-驗證器">Validator (驗證器)</h4>
+<table>
+<thead>
+<tr>
+<th>項目</th>
+<th>說明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>用途</td>
+<td>資料表欄位資料驗證</td>
+</tr>
+<tr>
+<td>可以存取結構</td>
+<td><code>所有獨立結構</code></td>
+</tr>
+<tr>
+<td>可以被存取結構</td>
+<td><code>Checker</code></td>
+</tr>
+</tbody>
+</table>
+<p>協助 Checker 驗證資料的正確性，若驗證錯誤則丟處例外，Checker 根據例外代碼去做處理</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="color:#ce5c00;font-weight:bold">&lt;?</span><span style="color:#000">php</span>
+
+<span style="color:#204a87;font-weight:bold">class</span> <span style="color:#000">PostValidator</span> <span style="color:#000;font-weight:bold">{</span>
+    <span style="color:#204a87;font-weight:bold">public</span> <span style="color:#204a87;font-weight:bold">function</span> <span style="color:#000">validatePostId</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">$input</span><span style="color:#000;font-weight:bold">){</span>
+        <span style="color:#8f5902;font-style:italic">// 設定驗證規則
+</span><span style="color:#8f5902;font-style:italic"></span>        <span style="color:#000">$rules</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000;font-weight:bold">[</span>
+            <span style="color:#4e9a06">&#39;post_id&#39;</span> <span style="color:#ce5c00;font-weight:bold">=&gt;</span> <span style="color:#000;font-weight:bold">[</span>
+                <span style="color:#4e9a06">&#39;required&#39;</span><span style="color:#000;font-weight:bold">,</span>
+                <span style="color:#4e9a06">&#39;max:20&#39;</span><span style="color:#000;font-weight:bold">,</span>
+            <span style="color:#000;font-weight:bold">],</span>
+        <span style="color:#000;font-weight:bold">];</span>
+
+        <span style="color:#8f5902;font-style:italic">// 開始驗證
+</span><span style="color:#8f5902;font-style:italic"></span>        <span style="color:#000">$this</span><span style="color:#ce5c00;font-weight:bold">-&gt;</span><span style="color:#c4a000">validator</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000">Validator</span><span style="color:#ce5c00;font-weight:bold">::</span><span style="color:#c4a000">make</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">$input</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">$rules</span><span style="color:#000;font-weight:bold">);</span>
+
+        <span style="color:#204a87;font-weight:bold">if</span> <span style="color:#000;font-weight:bold">(</span><span style="color:#000">$this</span><span style="color:#ce5c00;font-weight:bold">-&gt;</span><span style="color:#c4a000">validator</span><span style="color:#ce5c00;font-weight:bold">-&gt;</span><span style="color:#c4a000">fails</span><span style="color:#000;font-weight:bold">())</span> <span style="color:#000;font-weight:bold">{</span>
+            <span style="color:#204a87;font-weight:bold">throw</span> <span style="color:#204a87;font-weight:bold">new</span> <span style="color:#000">Exception</span><span style="color:#000;font-weight:bold">(</span>
+                <span style="color:#4e9a06">&#39;文章編號格式錯誤&#39;</span><span style="color:#000;font-weight:bold">,</span>
+                <span style="color:#000">PostExceptionCode</span><span style="color:#ce5c00;font-weight:bold">::</span><span style="color:#c4a000">POST_ID_FORMAT_ERROR</span>
+            <span style="color:#000;font-weight:bold">);</span>
+        <span style="color:#000;font-weight:bold">}</span>
+    <span style="color:#000;font-weight:bold">}</span>
+<span style="color:#000;font-weight:bold">}</span>
+</code></pre></div>
+  
+  <ins class="adsbygoogle"
+       style="display:block"
+       data-ad-client="ca-pub-1990193713845546"
+       data-ad-slot="1983708858"
+       data-ad-format="auto"
+       data-full-width-responsive="true"></ins>
+  <script>
+       (adsbygoogle = window.adsbygoogle || []).push({});
+  </script>
+
+<h4 id="combination資料整合">Combination（資料整合）</h4>
+<table>
+<thead>
+<tr>
+<th>項目</th>
+<th>說明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>用途</td>
+<td>整理 Repository 資料成資訊</td>
+</tr>
+<tr>
+<td>可以存取結構</td>
+<td><code>所有獨立結構</code></td>
+</tr>
+<tr>
+<td>可以被存取結構</td>
+<td><code>Serivce</code>、<code>CombinationManager</code></td>
+</tr>
+</tbody>
+</table>
+<p>當 Service 從 Repository 取得資料後，協助整理判斷 Repository 資料的屬性狀態，像是可以從 <em>文章編號</em> 取得 <em>文章網址</em></p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="color:#ce5c00;font-weight:bold">&lt;?</span><span style="color:#000">php</span>
+
+<span style="color:#204a87;font-weight:bold">class</span> <span style="color:#000">PostsCombination</span> <span style="color:#000;font-weight:bold">{</span>
+    <span style="color:#8f5902;font-style:italic">// 設定整合資訊
+</span><span style="color:#8f5902;font-style:italic"></span>    <span style="color:#204a87;font-weight:bold">public</span> <span style="color:#204a87;font-weight:bold">function</span> <span style="color:#000">setCombinationInfo</span><span style="color:#000;font-weight:bold">(</span><span style="color:#ce5c00;font-weight:bold">&amp;</span><span style="color:#000">$Posts</span><span style="color:#000;font-weight:bold">)</span>
+    <span style="color:#000;font-weight:bold">{</span>
+        <span style="color:#204a87;font-weight:bold">if</span> <span style="color:#000;font-weight:bold">(</span><span style="color:#ce5c00;font-weight:bold">!</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">$Posts</span> <span style="color:#000">instanceof</span> <span style="color:#000">Posts</span><span style="color:#000;font-weight:bold">))</span> <span style="color:#000;font-weight:bold">{</span>
+            <span style="color:#204a87;font-weight:bold">return</span> <span style="color:#204a87;font-weight:bold">false</span><span style="color:#000;font-weight:bold">;</span>
+        <span style="color:#000;font-weight:bold">}</span>
+
+        <span style="color:#8f5902;font-style:italic">// 文章網址
+</span><span style="color:#8f5902;font-style:italic"></span>        <span style="color:#000">$url</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000">url</span><span style="color:#000;font-weight:bold">(</span><span style="color:#4e9a06">&#34;article/</span><span style="color:#4e9a06">{</span><span style="color:#000">$Posts</span><span style="color:#ce5c00;font-weight:bold">-&gt;</span><span style="color:#c4a000">id</span><span style="color:#4e9a06">}</span><span style="color:#4e9a06">&#34;</span><span style="color:#000;font-weight:bold">)</span>
+
+        <span style="color:#000">$Posts</span><span style="color:#ce5c00;font-weight:bold">-&gt;</span><span style="color:#c4a000">info</span><span style="color:#ce5c00;font-weight:bold">-&gt;</span><span style="color:#c4a000">url</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000">$url</span><span style="color:#000;font-weight:bold">;</span>
+    <span style="color:#000;font-weight:bold">}</span>
+<span style="color:#000;font-weight:bold">}</span>
+</code></pre></div><h4 id="combinationmanager複合資料整合管理">CombinationManager（複合資料整合管理）</h4>
+<table>
+<thead>
+<tr>
+<th>項目</th>
+<th>說明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>用途</td>
+<td>整理多個 Service 的資料成資訊</td>
+</tr>
+<tr>
+<td>可以存取結構</td>
+<td><code>Combination</code>、<code>Serivce</code>、<code>所有獨立結構</code></td>
+</tr>
+<tr>
+<td>可以被存取結構</td>
+<td><code>ServiceManager</code>、<code>Controller</code></td>
+</tr>
+</tbody>
+</table>
+<p>當整合的資料需要經過不同的資料來源去判斷要產生什麼複合資訊，CombinationManager 協助整理不同來源的資料去做資料整合，目前會從 ServiceManager 去取得不同 Service 的資訊，所以將 CombinationManager 放在這一階層去進行呼叫</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="color:#ce5c00;font-weight:bold">&lt;?</span><span style="color:#000">php</span>
+
+<span style="color:#204a87;font-weight:bold">class</span> <span style="color:#000">PostsCombinationManager</span> <span style="color:#000;font-weight:bold">{</span>
+    <span style="color:#204a87;font-weight:bold">protected</span> <span style="color:#000">$UserService</span><span style="color:#000;font-weight:bold">;</span>
+    <span style="color:#204a87;font-weight:bold">public</span> <span style="color:#204a87;font-weight:bold">function</span> <span style="color:#000">__construct</span><span style="color:#000;font-weight:bold">(</span>
+        <span style="color:#000">UserCombination</span> <span style="color:#000">$UserCombination</span><span style="color:#000;font-weight:bold">,</span>
+        <span style="color:#000">ProjectService</span> <span style="color:#000">$ProjectService</span>
+    <span style="color:#000;font-weight:bold">)</span> <span style="color:#000;font-weight:bold">{</span>
+        <span style="color:#8f5902;font-style:italic">// 服務
+</span><span style="color:#8f5902;font-style:italic"></span>        <span style="color:#000">$this</span><span style="color:#ce5c00;font-weight:bold">-&gt;</span><span style="color:#c4a000">UserCombination</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000">$UserCombination</span><span style="color:#000;font-weight:bold">;</span>
+    <span style="color:#000;font-weight:bold">}</span>
+
+    <span style="color:#204a87;font-weight:bold">public</span> <span style="color:#204a87;font-weight:bold">function</span> <span style="color:#000">setCombinationInfo</span><span style="color:#000;font-weight:bold">(</span><span style="color:#ce5c00;font-weight:bold">&amp;</span><span style="color:#000">$combination_data</span><span style="color:#000;font-weight:bold">)</span>
+    <span style="color:#000;font-weight:bold">{</span>
+        <span style="color:#000">$Posts</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000">array_get</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">$combination_data</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#4e9a06">&#39;Posts&#39;</span><span style="color:#000;font-weight:bold">);</span>
+        <span style="color:#204a87;font-weight:bold">if</span> <span style="color:#000;font-weight:bold">(</span><span style="color:#000">$Posts</span> <span style="color:#000">instanceof</span> <span style="color:#000">Posts</span><span style="color:#000;font-weight:bold">)</span> <span style="color:#000;font-weight:bold">{</span>
+            <span style="color:#8f5902;font-style:italic">// 設定文章關聯作者資訊
+</span><span style="color:#8f5902;font-style:italic"></span>            <span style="color:#000">$this</span><span style="color:#ce5c00;font-weight:bold">-&gt;</span><span style="color:#c4a000">UserCombination</span><span style="color:#ce5c00;font-weight:bold">-&gt;</span><span style="color:#c4a000">setCombinationInfo</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">$Posts</span><span style="color:#ce5c00;font-weight:bold">-&gt;</span><span style="color:#c4a000">User</span><span style="color:#000;font-weight:bold">);</span>
+
+            <span style="color:#8f5902;font-style:italic">// 是專題文章
+</span><span style="color:#8f5902;font-style:italic"></span>            <span style="color:#204a87;font-weight:bold">if</span> <span style="color:#000;font-weight:bold">(</span><span style="color:#000">$Posts</span><span style="color:#ce5c00;font-weight:bold">-&gt;</span><span style="color:#c4a000">type</span> <span style="color:#ce5c00;font-weight:bold">==</span> <span style="color:#000">PostsConstant</span><span style="color:#ce5c00;font-weight:bold">::</span><span style="color:#c4a000">TYPE_PROJECT</span><span style="color:#000;font-weight:bold">)</span> <span style="color:#000;font-weight:bold">{</span>
+                <span style="color:#000">$Project</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000">$this</span><span style="color:#ce5c00;font-weight:bold">-&gt;</span><span style="color:#c4a000">ProjectService</span><span style="color:#ce5c00;font-weight:bold">-&gt;</span><span style="color:#c4a000">findProjectByPostId</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">$Posts</span><span style="color:#ce5c00;font-weight:bold">-&gt;</span><span style="color:#c4a000">id</span><span style="color:#000;font-weight:bold">);</span>
+                <span style="color:#000">$url</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000">url</span><span style="color:#000;font-weight:bold">(</span><span style="color:#4e9a06">&#34;project/</span><span style="color:#4e9a06">{</span><span style="color:#000">$Project</span><span style="color:#ce5c00;font-weight:bold">-&gt;</span><span style="color:#c4a000">slug</span><span style="color:#4e9a06">}</span><span style="color:#4e9a06">/</span><span style="color:#4e9a06">{</span><span style="color:#000">$Posts</span><span style="color:#ce5c00;font-weight:bold">-&gt;</span><span style="color:#c4a000">id</span><span style="color:#4e9a06">}</span><span style="color:#4e9a06">&#34;</span><span style="color:#000;font-weight:bold">)</span>
+                <span style="color:#000">$Posts</span><span style="color:#ce5c00;font-weight:bold">-&gt;</span><span style="color:#c4a000">info</span><span style="color:#ce5c00;font-weight:bold">-&gt;</span><span style="color:#c4a000">url</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000">$url</span><span style="color:#000;font-weight:bold">;</span>
+            <span style="color:#000;font-weight:bold">};</span>
+        <span style="color:#000;font-weight:bold">}</span>
+    <span style="color:#000;font-weight:bold">}</span>
+<span style="color:#000;font-weight:bold">}</span>
+
+</code></pre></div>
+  
+  <ins class="adsbygoogle"
+       style="display:block"
+       data-ad-client="ca-pub-1990193713845546"
+       data-ad-slot="1983708858"
+       data-ad-format="auto"
+       data-full-width-responsive="true"></ins>
+  <script>
+       (adsbygoogle = window.adsbygoogle || []).push({});
+  </script>
+
+<h3 id="b獨立結構-1">B.獨立結構</h3>
+<h4 id="cachemanager-快取">CacheManager (快取)</h4>
+<table>
+<thead>
+<tr>
+<th>項目</th>
+<th>說明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>用途</td>
+<td>管理資源快取鍵值及清除快取</td>
+</tr>
+<tr>
+<td>可以存取結構</td>
+<td>x</td>
+</tr>
+<tr>
+<td>可以被存取結構</td>
+<td>無限制</td>
+</tr>
+</tbody>
+</table>
+<p>在 <em>複雜</em> 的資料庫查詢（Repository）或是商業邏輯（Service、ServiceManager），想要在一定時間內不要再重複的進行複雜的運算，可以透過快取將運算的結果快取起來</p>
+<p><em>PostsCacheManager 文章資源庫</em></p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="color:#204a87;font-weight:bold">class</span> <span style="color:#000">PostRepository</span> <span style="color:#000;font-weight:bold">{</span>
+    <span style="color:#204a87;font-weight:bold">public</span> <span style="color:#204a87;font-weight:bold">function</span> <span style="color:#000">__construct</span><span style="color:#000;font-weight:bold">(</span>
+        <span style="color:#000">Post</span> <span style="color:#000">$Post</span><span style="color:#000;font-weight:bold">,</span>
+        <span style="color:#000">PostsCacheManager</span> <span style="color:#000">$PostsCacheManager</span>
+    <span style="color:#000;font-weight:bold">)</span>
+    <span style="color:#000;font-weight:bold">{</span>
+        <span style="color:#000">$this</span><span style="color:#ce5c00;font-weight:bold">-&gt;</span><span style="color:#c4a000">Post</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000">$Post</span><span style="color:#000;font-weight:bold">;</span>
+        <span style="color:#000">$this</span><span style="color:#ce5c00;font-weight:bold">-&gt;</span><span style="color:#c4a000">PostsCacheManager</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000">$PostsCacheManager</span><span style="color:#000;font-weight:bold">;</span>
+    <span style="color:#000;font-weight:bold">}</span>
+
+    <span style="color:#204a87;font-weight:bold">public</span> <span style="color:#204a87;font-weight:bold">function</span> <span style="color:#000">find</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">$post_id</span><span style="color:#000;font-weight:bold">)</span> <span style="color:#000;font-weight:bold">{</span>
+        <span style="color:#204a87;font-weight:bold">try</span> <span style="color:#000;font-weight:bold">{</span>
+            <span style="color:#000">$cache_key</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000">$this</span><span style="color:#ce5c00;font-weight:bold">-&gt;</span><span style="color:#c4a000">PostsCacheManager</span><span style="color:#ce5c00;font-weight:bold">-&gt;</span><span style="color:#c4a000">getPostIdCacheKey</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">$post_id</span><span style="color:#000;font-weight:bold">);</span>
+            <span style="color:#000">$Posts</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000">$this</span><span style="color:#ce5c00;font-weight:bold">-&gt;</span><span style="color:#c4a000">PostsCacheManager</span><span style="color:#ce5c00;font-weight:bold">-&gt;</span><span style="color:#c4a000">getCache</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">$cache_key</span><span style="color:#000;font-weight:bold">);</span>
+            <span style="color:#204a87;font-weight:bold">if</span> <span style="color:#000;font-weight:bold">(</span><span style="color:#ce5c00;font-weight:bold">!</span><span style="color:#000">is_null</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">$Posts</span><span style="color:#000;font-weight:bold">))</span> <span style="color:#000;font-weight:bold">{</span>
+                <span style="color:#204a87;font-weight:bold">return</span> <span style="color:#000">$Posts</span><span style="color:#000;font-weight:bold">;</span>
+            <span style="color:#000;font-weight:bold">}</span>
+
+            <span style="color:#8f5902;font-style:italic">// 撈取資料庫文章資料
+</span><span style="color:#8f5902;font-style:italic"></span>            <span style="color:#000">$Posts</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000">$this</span><span style="color:#ce5c00;font-weight:bold">-&gt;</span><span style="color:#c4a000">Post</span><span style="color:#ce5c00;font-weight:bold">-&gt;</span><span style="color:#c4a000">find</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">$post_id</span><span style="color:#000;font-weight:bold">);</span>
+
+            <span style="color:#204a87;font-weight:bold">if</span> <span style="color:#000;font-weight:bold">(</span><span style="color:#ce5c00;font-weight:bold">!</span><span style="color:#000">is_null</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">$Posts</span><span style="color:#000;font-weight:bold">))</span> <span style="color:#000;font-weight:bold">{</span>
+                <span style="color:#8f5902;font-style:italic">// 有該資料，將資料存入快取
+</span><span style="color:#8f5902;font-style:italic"></span>                <span style="color:#000">$this</span><span style="color:#ce5c00;font-weight:bold">-&gt;</span><span style="color:#c4a000">PostsCacheManager</span><span style="color:#ce5c00;font-weight:bold">-&gt;</span><span style="color:#c4a000">putCache</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">$Posts</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">$cache_key</span><span style="color:#000;font-weight:bold">);</span>
+            <span style="color:#000;font-weight:bold">}</span>
+
+            <span style="color:#204a87;font-weight:bold">return</span> <span style="color:#000">$Posts</span><span style="color:#000;font-weight:bold">;</span>
+        <span style="color:#000;font-weight:bold">}</span> <span style="color:#204a87;font-weight:bold">catch</span> <span style="color:#000;font-weight:bold">(</span><span style="color:#000">Exception</span> <span style="color:#000">$exception</span><span style="color:#000;font-weight:bold">)</span> <span style="color:#000;font-weight:bold">{</span>
+            <span style="color:#204a87;font-weight:bold">throw</span> <span style="color:#000">$exception</span>
+        <span style="color:#000;font-weight:bold">}</span>
+    <span style="color:#000;font-weight:bold">}</span>
+
+    <span style="color:#204a87;font-weight:bold">public</span> <span style="color:#204a87;font-weight:bold">function</span> <span style="color:#000">findLatestPost</span><span style="color:#000;font-weight:bold">()</span> <span style="color:#000;font-weight:bold">{</span>
+        <span style="color:#204a87;font-weight:bold">try</span> <span style="color:#000;font-weight:bold">{</span>
+            <span style="color:#8f5902;font-style:italic">// 撈取資料庫文章資料
+</span><span style="color:#8f5902;font-style:italic"></span>            <span style="color:#000">$Post</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000">$this</span><span style="color:#ce5c00;font-weight:bold">-&gt;</span><span style="color:#c4a000">Post</span>
+                <span style="color:#ce5c00;font-weight:bold">-&gt;</span><span style="color:#c4a000">order</span><span style="color:#000;font-weight:bold">(</span><span style="color:#4e9a06">&#39;created_at&#39;</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#4e9a06">&#39;desc&#39;</span><span style="color:#000;font-weight:bold">)</span>
+                <span style="color:#ce5c00;font-weight:bold">-&gt;</span><span style="color:#c4a000">first</span><span style="color:#000;font-weight:bold">();</span>
+
+            <span style="color:#204a87;font-weight:bold">return</span> <span style="color:#000">$Post</span><span style="color:#000;font-weight:bold">;</span>
+        <span style="color:#000;font-weight:bold">}</span> <span style="color:#204a87;font-weight:bold">catch</span> <span style="color:#000;font-weight:bold">(</span><span style="color:#000">Exception</span> <span style="color:#000">$exception</span><span style="color:#000;font-weight:bold">)</span> <span style="color:#000;font-weight:bold">{</span>
+            <span style="color:#204a87;font-weight:bold">throw</span> <span style="color:#000">$exception</span>
+        <span style="color:#000;font-weight:bold">}</span>
+    <span style="color:#000;font-weight:bold">}</span>
+<span style="color:#000;font-weight:bold">}</span>
+</code></pre></div><p><em>PostsCacheManager 文章快取</em></p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="color:#204a87;font-weight:bold">class</span> <span style="color:#000">PostsCacheManager</span> <span style="color:#000;font-weight:bold">{</span>
+    <span style="color:#204a87;font-weight:bold">protected</span> <span style="color:#000">$cache_key</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000;font-weight:bold">[</span>
+        <span style="color:#8f5902;font-style:italic">// 文章快取
+</span><span style="color:#8f5902;font-style:italic"></span>        <span style="color:#4e9a06">&#39;post_id&#39;</span> <span style="color:#ce5c00;font-weight:bold">=&gt;</span> <span style="color:#4e9a06">&#39;[PostById][post_id:{post_id}]&#39;</span><span style="color:#000;font-weight:bold">,</span>
+        <span style="color:#8f5902;font-style:italic">// 已發布文章快取
+</span><span style="color:#8f5902;font-style:italic"></span>        <span style="color:#4e9a06">&#39;published_post_id&#39;</span> <span style="color:#ce5c00;font-weight:bold">=&gt;</span> <span style="color:#4e9a06">&#39;[PublishedPostById][post_id:{post_id}]&#39;</span><span style="color:#000;font-weight:bold">,</span>
+    <span style="color:#000;font-weight:bold">];</span>
+
+    <span style="color:#8f5902;font-style:italic">/**
+</span><span style="color:#8f5902;font-style:italic">     * 文章快取
+</span><span style="color:#8f5902;font-style:italic">     */</span>
+    <span style="color:#204a87;font-weight:bold">public</span> <span style="color:#204a87;font-weight:bold">function</span> <span style="color:#000">getPostIdCacheKey</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">$post_id</span><span style="color:#000;font-weight:bold">)</span>
+    <span style="color:#000;font-weight:bold">{</span>
+        <span style="color:#000">$search</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000;font-weight:bold">[</span>
+            <span style="color:#4e9a06">&#39;{post_id}&#39;</span><span style="color:#000;font-weight:bold">,</span>
+        <span style="color:#000;font-weight:bold">];</span>
+        <span style="color:#000">$replace</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000;font-weight:bold">[</span>
+            <span style="color:#000">$post_id</span><span style="color:#000;font-weight:bold">,</span>
+        <span style="color:#000;font-weight:bold">];</span>
+        <span style="color:#000">$cache_key</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000">str_replace</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">$search</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">$replace</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">$this</span><span style="color:#ce5c00;font-weight:bold">-&gt;</span><span style="color:#c4a000">cache_key</span><span style="color:#000;font-weight:bold">[</span><span style="color:#4e9a06">&#39;post_id&#39;</span><span style="color:#000;font-weight:bold">]);</span>
+
+        <span style="color:#204a87;font-weight:bold">return</span> <span style="color:#000">$cache_key</span><span style="color:#000;font-weight:bold">;</span>
+    <span style="color:#000;font-weight:bold">}</span>
+
+    <span style="color:#8f5902;font-style:italic">/**
+</span><span style="color:#8f5902;font-style:italic">     * 已發布文章快取
+</span><span style="color:#8f5902;font-style:italic">     */</span>
+    <span style="color:#204a87;font-weight:bold">public</span> <span style="color:#204a87;font-weight:bold">function</span> <span style="color:#000">getPublishedPostIdCacheKey</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">$post_id</span><span style="color:#000;font-weight:bold">)</span>
+    <span style="color:#000;font-weight:bold">{</span>
+        <span style="color:#000">$search</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000;font-weight:bold">[</span>
+            <span style="color:#4e9a06">&#39;{post_id}&#39;</span><span style="color:#000;font-weight:bold">,</span>
+        <span style="color:#000;font-weight:bold">];</span>
+        <span style="color:#000">$replace</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000;font-weight:bold">[</span>
+            <span style="color:#000">$post_id</span><span style="color:#000;font-weight:bold">,</span>
+        <span style="color:#000;font-weight:bold">];</span>
+        <span style="color:#000">$cache_key</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000">str_replace</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">$search</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">$replace</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">$this</span><span style="color:#ce5c00;font-weight:bold">-&gt;</span><span style="color:#c4a000">cache_key</span><span style="color:#000;font-weight:bold">[</span><span style="color:#4e9a06">&#39;published_post_id&#39;</span><span style="color:#000;font-weight:bold">]);</span>
+
+        <span style="color:#204a87;font-weight:bold">return</span> <span style="color:#000">$cache_key</span><span style="color:#000;font-weight:bold">;</span>
+    <span style="color:#000;font-weight:bold">}</span>
+
+    <span style="color:#8f5902;font-style:italic">/**
+</span><span style="color:#8f5902;font-style:italic">     * 文章快取
+</span><span style="color:#8f5902;font-style:italic">     */</span>
+    <span style="color:#204a87;font-weight:bold">public</span> <span style="color:#204a87;font-weight:bold">function</span> <span style="color:#000">getPostIdCacheKey</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">$post_id</span><span style="color:#000;font-weight:bold">)</span>
+    <span style="color:#000;font-weight:bold">{</span>
+        <span style="color:#000">$search</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000;font-weight:bold">[</span>
+            <span style="color:#4e9a06">&#39;{post_id}&#39;</span><span style="color:#000;font-weight:bold">,</span>
+        <span style="color:#000;font-weight:bold">];</span>
+        <span style="color:#000">$replace</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000;font-weight:bold">[</span>
+            <span style="color:#000">$post_id</span><span style="color:#000;font-weight:bold">,</span>
+        <span style="color:#000;font-weight:bold">];</span>
+        <span style="color:#000">$cache_key</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000">str_replace</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">$search</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">$replace</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">$this</span><span style="color:#ce5c00;font-weight:bold">-&gt;</span><span style="color:#c4a000">cache_key</span><span style="color:#000;font-weight:bold">[</span><span style="color:#4e9a06">&#39;post_id&#39;</span><span style="color:#000;font-weight:bold">]);</span>
+
+        <span style="color:#204a87;font-weight:bold">return</span> <span style="color:#000">$cache_key</span><span style="color:#000;font-weight:bold">;</span>
+    <span style="color:#000;font-weight:bold">}</span>
+
+
+    <span style="color:#8f5902;font-style:italic">/**
+</span><span style="color:#8f5902;font-style:italic">     * 清除文章快取
+</span><span style="color:#8f5902;font-style:italic">     */</span>
+    <span style="color:#204a87;font-weight:bold">public</span> <span style="color:#204a87;font-weight:bold">function</span> <span style="color:#000">forgetPostsCache</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">$cache_data</span><span style="color:#000;font-weight:bold">)</span>
+    <span style="color:#000;font-weight:bold">{</span>
+        <span style="color:#000">$Posts</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000">array_get</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">$cache_data</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#4e9a06">&#39;Posts&#39;</span><span style="color:#000;font-weight:bold">);</span>
+
+
+        <span style="color:#204a87;font-weight:bold">if</span> <span style="color:#000;font-weight:bold">(</span><span style="color:#ce5c00;font-weight:bold">!</span><span style="color:#000">is_null</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">$Posts</span><span style="color:#000;font-weight:bold">)</span> <span style="color:#204a87;font-weight:bold">AND</span> <span style="color:#000;font-weight:bold">(</span><span style="color:#000">$Posts</span> <span style="color:#000">instanceof</span> <span style="color:#000">Posts</span><span style="color:#000;font-weight:bold">))</span> <span style="color:#000;font-weight:bold">{</span>
+            <span style="color:#000">$cache_key</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000">$this</span><span style="color:#ce5c00;font-weight:bold">-&gt;</span><span style="color:#c4a000">getPostIdCacheKey</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">$post_id</span><span style="color:#000;font-weight:bold">);</span>
+            <span style="color:#000">$is_cache_forget</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000">$Cache</span><span style="color:#ce5c00;font-weight:bold">::</span><span style="color:#c4a000">forget</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">$cache_key</span><span style="color:#000;font-weight:bold">);</span>
+
+            <span style="color:#000">$cache_key</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000">$this</span><span style="color:#ce5c00;font-weight:bold">-&gt;</span><span style="color:#c4a000">getPublishedPostIdCacheKey</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">$post_id</span><span style="color:#000;font-weight:bold">);</span>
+            <span style="color:#000">$is_cache_forget</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000">$Cache</span><span style="color:#ce5c00;font-weight:bold">::</span><span style="color:#c4a000">forget</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">$cache_key</span><span style="color:#000;font-weight:bold">);</span>
+
+            <span style="color:#8f5902;font-style:italic">// .... 清除文章其他快取
+</span><span style="color:#8f5902;font-style:italic"></span>        <span style="color:#000;font-weight:bold">}</span>
+    <span style="color:#000;font-weight:bold">}</span>
+<span style="color:#000;font-weight:bold">}</span>
+</code></pre></div>
+  
+  <ins class="adsbygoogle"
+       style="display:block"
+       data-ad-client="ca-pub-1990193713845546"
+       data-ad-slot="1983708858"
+       data-ad-format="auto"
+       data-full-width-responsive="true"></ins>
+  <script>
+       (adsbygoogle = window.adsbygoogle || []).push({});
+  </script>
+
+<h4 id="constant-常數">Constant (常數)</h4>
+<table>
+<thead>
+<tr>
+<th>項目</th>
+<th>說明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>用途</td>
+<td>定義資料狀態名稱</td>
+</tr>
+<tr>
+<td>可以存取結構</td>
+<td>x</td>
+</tr>
+<tr>
+<td>可以被存取結構</td>
+<td>無限制</td>
+</tr>
+</tbody>
+</table>
+<p>資料皆為靜態變數，可以供所有資料層級 (e.g. Controller、Service、Repository) 做存取</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="color:#ce5c00;font-weight:bold">&lt;?</span><span style="color:#000">php</span>
+
+<span style="color:#204a87;font-weight:bold">class</span> <span style="color:#000">PostConstant</span> <span style="color:#000;font-weight:bold">{</span>
+    <span style="color:#204a87;font-weight:bold">const</span> <span style="color:#000">POST_TYPE_PUBLIC</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#4e9a06">&#39;P&#39;</span><span style="color:#000;font-weight:bold">;</span>
+    <span style="color:#204a87;font-weight:bold">const</span> <span style="color:#000">POST_TYPE_DELETE</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#4e9a06">&#39;D&#39;</span><span style="color:#000;font-weight:bold">;</span>
+<span style="color:#000;font-weight:bold">}</span>
+</code></pre></div><h4 id="support-支援">Support (支援)</h4>
+<table>
+<thead>
+<tr>
+<th>項目</th>
+<th>說明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>用途</td>
+<td>協助處理獨立邏輯資料處理</td>
+</tr>
+<tr>
+<td>可以存取結構</td>
+<td>x</td>
+</tr>
+<tr>
+<td>可以被存取結構</td>
+<td>無限制</td>
+</tr>
+</tbody>
+</table>
+<p>方法皆為靜態變數，可以供所有資料層級 (e.g. Controller、Service、Repository) 做存取</p>
+<p>若有其他可供全域共用的方法皆寫在 Support 靜態方法供大家存取</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="color:#ce5c00;font-weight:bold">&lt;?</span><span style="color:#000">php</span>
+
+<span style="color:#204a87;font-weight:bold">class</span> <span style="color:#000">PostSupport</span> <span style="color:#000;font-weight:bold">{</span>
+    <span style="color:#8f5902;font-style:italic">// 撈取所有文章類型
+</span><span style="color:#8f5902;font-style:italic"></span>    <span style="color:#204a87;font-weight:bold">public</span> <span style="color:#204a87;font-weight:bold">static</span> <span style="color:#204a87;font-weight:bold">function</span> <span style="color:#000">getAllPostType</span><span style="color:#000;font-weight:bold">()</span> <span style="color:#000;font-weight:bold">{</span>
+        <span style="color:#000">$all_post_type</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000;font-weight:bold">[</span>
+            <span style="color:#000">PostConstant</span><span style="color:#ce5c00;font-weight:bold">::</span><span style="color:#c4a000">POST_TYPE_PUBLIC</span><span style="color:#000;font-weight:bold">,</span>
+            <span style="color:#000">PostConstant</span><span style="color:#ce5c00;font-weight:bold">::</span><span style="color:#c4a000">POST_TYPE_DELETE</span><span style="color:#000;font-weight:bold">,</span>
+        <span style="color:#000;font-weight:bold">];</span>
+        <span style="color:#204a87;font-weight:bold">return</span> <span style="color:#000">$all_post_type</span><span style="color:#000;font-weight:bold">;</span>
+    <span style="color:#000;font-weight:bold">}</span>
+<span style="color:#000;font-weight:bold">}</span>
+</code></pre></div>
+  
+  <ins class="adsbygoogle"
+       style="display:block"
+       data-ad-client="ca-pub-1990193713845546"
+       data-ad-slot="1983708858"
+       data-ad-format="auto"
+       data-full-width-responsive="true"></ins>
+  <script>
+       (adsbygoogle = window.adsbygoogle || []).push({});
+  </script>
+
+<h4 id="exceptioncode-例外代碼">ExceptionCode (例外代碼)</h4>
+<table>
+<thead>
+<tr>
+<th>項目</th>
+<th>說明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>用途</td>
+<td>例外錯誤代碼定義</td>
+</tr>
+<tr>
+<td>可以存取結構</td>
+<td>x</td>
+</tr>
+<tr>
+<td>可以被存取結構</td>
+<td>x</td>
+</tr>
+</tbody>
+</table>
+<p>資料皆為靜態變數，可以供所有資料層級 (e.g. Controller、Service、Repository) 做存取</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="color:#ce5c00;font-weight:bold">&lt;?</span><span style="color:#000">php</span>
+
+<span style="color:#204a87;font-weight:bold">class</span> <span style="color:#000">PostExceptionCode</span> <span style="color:#000;font-weight:bold">{</span>
+    <span style="color:#204a87;font-weight:bold">const</span> <span style="color:#000">POST_ID_FORMAT_ERROR</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#0000cf;font-weight:bold">10000001</span><span style="color:#000;font-weight:bold">;</span>
+    <span style="color:#204a87;font-weight:bold">const</span> <span style="color:#000">POST_NOT_FOUND</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#0000cf;font-weight:bold">10000002</span><span style="color:#000;font-weight:bold">;</span>
+    <span style="color:#204a87;font-weight:bold">const</span> <span style="color:#000">POST_TAG_NOT_FOUND</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#0000cf;font-weight:bold">10000003</span><span style="color:#000;font-weight:bold">;</span>
+<span style="color:#000;font-weight:bold">}</span>
+</code></pre></div><h2 id="view-視圖-使用限制">View (視圖) 使用限制</h2>
+<p><code>View</code> 的職責是負責顯示資料，所有的資料應由 <code>Controller</code> 準備好再傳給 <code>View</code>，所以<code>不要</code>在 <code>View</code> 內有複雜的程式判斷邏輯，在 <code>View</code> 裡面只有 <code>if</code>, <code>for</code>, <code>foreach</code> 跟 <code>echo 列印</code> 的程式，僅需要將資料呈現在對的 HTML 裡面，不要再對資料重複處理過。</p>
+<p>像是文章的網址可能會因為類型不同會有不同的網址，像是一般文章網址可能為 <code>http://kejyun.com/post/1</code>，而影音文章網址可能為 <code>http://kejyun.com/video/2</code>，兩者的資料皆為 Post 資料表的資料，在 <code>View</code> 中要顯示網址應為 <code>echo $Post-&gt;post_url;</code> 將網址印出，<code>post_url</code> 則是在傳給 <code>View</code> 之前就經過邏輯判斷的資料，而不是在 <code>View</code> 中判斷不同文章類型（<code>PostConstant::POST_TYPE_NORMAL</code>, <code>PostConstant::POST_TYPE_VIDEO</code>）在 View 中顯示不同的網址資料。</p>
+<p>之後若文章網址邏輯需要修改，則需要到各個 View 中去修改，很容易漏改道造成系統程式出錯</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="color:#ce5c00;font-weight:bold">&lt;</span><span style="color:#000">a</span> <span style="color:#000">href</span><span style="color:#ce5c00;font-weight:bold">=</span><span style="color:#4e9a06">&#34;{{ </span><span style="color:#4e9a06">$Post-&gt;info</span><span style="color:#4e9a06">-&gt;post_url }}&#34;</span><span style="color:#ce5c00;font-weight:bold">&gt;</span> <span style="color:#000;font-weight:bold">{{</span> <span style="color:#000">$Post</span><span style="color:#ce5c00;font-weight:bold">-&gt;</span><span style="color:#c4a000">Title</span> <span style="color:#000;font-weight:bold">}}</span><span style="color:#ce5c00;font-weight:bold">&lt;/</span><span style="color:#000">a</span><span style="color:#ce5c00;font-weight:bold">&gt;</span>
+</code></pre></div>
+
+		
+		
+
+  
+  <ins class="adsbygoogle"
+       style="display:block"
+       data-ad-client="ca-pub-1990193713845546"
+       data-ad-slot="8247872484"
+       data-ad-format="auto"
+       data-full-width-responsive="true"></ins>
+  <script>
+       (adsbygoogle = window.adsbygoogle || []).push({});
+  </script>
+
+
+
+  
+  <ins class="adsbygoogle"
+       style="display:block; text-align:center;"
+       data-ad-layout="in-article"
+       data-ad-format="fluid"
+       data-ad-client="ca-pub-1990193713845546"
+       data-ad-slot="3237080773"></ins>
+
+
+
+
+		
+		
+
+		
+		
+
+		
+		<div class="text-muted mt-5 pt-3 border-top">最後修改 May 18, 2021
+</div>
+</div>
+
+
+          </main>
+        </div>
+      </div>
+      
+<footer class="bg-dark py-5 row d-print-none">
+  <div class="container-fluid mx-sm-5">
+    <div class="row">
+      <div class="col-6 col-sm-4 text-xs-center order-sm-2">
+        
+        
+        
+      </div>
+      <div class="col-6 col-sm-4 text-right text-xs-center order-sm-3">
+        
+        
+        
+<ul class="list-inline mb-0">
+  
+  <li class="list-inline-item mx-2 h3" data-toggle="tooltip" data-placement="top" title="GitHub" aria-label="GitHub">
+    <a class="text-white" target="_blank" rel="noopener noreferrer" href="https://github.com/kejyun">
+      <i class="fab fa-github"></i>
+    </a>
+  </li>
+  
+  <li class="list-inline-item mx-2 h3" data-toggle="tooltip" data-placement="top" title="Linkedin" aria-label="Linkedin">
+    <a class="text-white" target="_blank" rel="noopener noreferrer" href="https://tw.linkedin.com/in/kejyun">
+      <i class="fab fa-linkedin"></i>
+    </a>
+  </li>
+  
+</ul>
+
+        
+        
+      </div>
+      <div class="col-12 col-sm-4 text-center py-2 order-sm-2">
+        <small class="text-white">&copy; 2021 KJ All Rights Reserved</small>
+        
+	
+		
+	
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js" integrity="sha384-w1Q4orYjBQndcko6MimVbzY0tgp4pWB4lZ7lr30WKz0vr/aWKhXdBNmNb5D92v7s" crossorigin="anonymous"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script src="/js/main.min.906bd02f142be20eb94bb49539a18a3e93ec0b9ff5f5dcf3796eed436a6103d2.js" integrity="sha256-kGvQLxQr4g65S7SVOaGKPpPsC5/19dzzeW7tQ2phA9I=" crossorigin="anonymous"></script>
+
+
+
+
+  </body>
+</html>

@@ -1,0 +1,19 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Laravel 菜雞修煉場 – Categories</title>
+    <link>https://laravel-for-newbie.kejyun.com/zh/categories/</link>
+    <description>Recent content in Categories on Laravel 菜雞修煉場</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh</language>
+    <lastBuildDate>Fri, 20 Aug 2021 08:50:29 +0800</lastBuildDate>
+    
+	  <atom:link href="https://laravel-for-newbie.kejyun.com/zh/categories/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+      
+        
+      
+    
+    
+  </channel>
+</rss>
