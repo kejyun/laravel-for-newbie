@@ -2,10 +2,20 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://laravel-for-newbie.kejyun.com/en/advanced/scheduling/</loc>
-    <lastmod>2021-08-20T08:50:29+08:00</lastmod>
+    <loc>https://laravel-for-newbie.kejyun.com/en/advanced/database/postgresql-timestamp-timestamptz/</loc>
+    <lastmod>2021-08-31T08:50:29+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
+    <xhtml:link
+                rel="alternate"
+                hreflang="zh"
+                href="https://laravel-for-newbie.kejyun.com/zh/advanced/database/postgresql-timestamp-timestamptz/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://laravel-for-newbie.kejyun.com/en/advanced/database/postgresql-timestamp-timestamptz/"
+                />
   </url><url>
     <loc>https://laravel-for-newbie.kejyun.com/en/advanced/scheduling/docker/</loc>
     <lastmod>2021-08-24T08:50:29+08:00</lastmod>
@@ -20,6 +30,21 @@
                 rel="alternate"
                 hreflang="en"
                 href="https://laravel-for-newbie.kejyun.com/en/advanced/scheduling/docker/"
+                />
+  </url><url>
+    <loc>https://laravel-for-newbie.kejyun.com/en/advanced/database/</loc>
+    <lastmod>2021-08-31T08:50:29+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link
+                rel="alternate"
+                hreflang="zh"
+                href="https://laravel-for-newbie.kejyun.com/zh/advanced/database/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://laravel-for-newbie.kejyun.com/en/advanced/database/"
                 />
   </url><url>
     <loc>https://laravel-for-newbie.kejyun.com/en/advanced/</loc>
@@ -37,18 +62,33 @@
                 href="https://laravel-for-newbie.kejyun.com/en/advanced/"
                 />
   </url><url>
+    <loc>https://laravel-for-newbie.kejyun.com/en/advanced/scheduling/</loc>
+    <lastmod>2021-08-20T08:50:29+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link
+                rel="alternate"
+                hreflang="zh"
+                href="https://laravel-for-newbie.kejyun.com/zh/advanced/scheduling/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://laravel-for-newbie.kejyun.com/en/advanced/scheduling/"
+                />
+  </url><url>
     <loc>https://laravel-for-newbie.kejyun.com/en/tags/advanced/</loc>
-    <lastmod>2021-08-24T08:50:29+08:00</lastmod>
+    <lastmod>2021-08-31T08:50:29+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url><url>
     <loc>https://laravel-for-newbie.kejyun.com/en/categories/advanced/</loc>
-    <lastmod>2021-08-24T08:50:29+08:00</lastmod>
+    <lastmod>2021-08-31T08:50:29+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url><url>
     <loc>https://laravel-for-newbie.kejyun.com/en/categories/</loc>
-    <lastmod>2021-08-24T08:50:29+08:00</lastmod>
+    <lastmod>2021-08-31T08:50:29+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
     <xhtml:link
@@ -60,6 +100,206 @@
                 rel="alternate"
                 hreflang="en"
                 href="https://laravel-for-newbie.kejyun.com/en/categories/"
+                />
+  </url><url>
+    <loc>https://laravel-for-newbie.kejyun.com/en/tags/database/</loc>
+    <lastmod>2021-08-31T08:50:29+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link
+                rel="alternate"
+                hreflang="zh"
+                href="https://laravel-for-newbie.kejyun.com/zh/tags/database/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://laravel-for-newbie.kejyun.com/en/tags/database/"
+                />
+  </url><url>
+    <loc>https://laravel-for-newbie.kejyun.com/en/categories/database/</loc>
+    <lastmod>2021-08-31T08:50:29+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link
+                rel="alternate"
+                hreflang="zh"
+                href="https://laravel-for-newbie.kejyun.com/zh/categories/database/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://laravel-for-newbie.kejyun.com/en/categories/database/"
+                />
+  </url><url>
+    <loc>https://laravel-for-newbie.kejyun.com/en/tags/documentation/</loc>
+    <lastmod>2021-08-31T08:50:29+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url><url>
+    <loc>https://laravel-for-newbie.kejyun.com/en/categories/documentation/</loc>
+    <lastmod>2021-08-31T08:50:29+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url><url>
+    <loc>https://laravel-for-newbie.kejyun.com/en/tags/laravel/</loc>
+    <lastmod>2021-08-31T08:50:29+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link
+                rel="alternate"
+                hreflang="zh"
+                href="https://laravel-for-newbie.kejyun.com/zh/tags/laravel/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://laravel-for-newbie.kejyun.com/en/tags/laravel/"
+                />
+  </url><url>
+    <loc>https://laravel-for-newbie.kejyun.com/en/categories/laravel/</loc>
+    <lastmod>2021-08-31T08:50:29+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link
+                rel="alternate"
+                hreflang="zh"
+                href="https://laravel-for-newbie.kejyun.com/zh/categories/laravel/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://laravel-for-newbie.kejyun.com/en/categories/laravel/"
+                />
+  </url><url>
+    <loc>https://laravel-for-newbie.kejyun.com/en/</loc>
+    <lastmod>2021-08-31T08:50:29+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link
+                rel="alternate"
+                hreflang="zh"
+                href="https://laravel-for-newbie.kejyun.com/zh/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://laravel-for-newbie.kejyun.com/en/"
+                />
+  </url><url>
+    <loc>https://laravel-for-newbie.kejyun.com/en/tags/postgresql/</loc>
+    <lastmod>2021-08-31T08:50:29+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link
+                rel="alternate"
+                hreflang="zh"
+                href="https://laravel-for-newbie.kejyun.com/zh/tags/postgresql/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://laravel-for-newbie.kejyun.com/en/tags/postgresql/"
+                />
+  </url><url>
+    <loc>https://laravel-for-newbie.kejyun.com/en/categories/postgresql/</loc>
+    <lastmod>2021-08-31T08:50:29+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link
+                rel="alternate"
+                hreflang="zh"
+                href="https://laravel-for-newbie.kejyun.com/zh/categories/postgresql/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://laravel-for-newbie.kejyun.com/en/categories/postgresql/"
+                />
+  </url><url>
+    <loc>https://laravel-for-newbie.kejyun.com/en/tags/scratch/</loc>
+    <lastmod>2021-08-31T08:50:29+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url><url>
+    <loc>https://laravel-for-newbie.kejyun.com/en/categories/scratch/</loc>
+    <lastmod>2021-08-31T08:50:29+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url><url>
+    <loc>https://laravel-for-newbie.kejyun.com/en/tags/</loc>
+    <lastmod>2021-08-31T08:50:29+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link
+                rel="alternate"
+                hreflang="zh"
+                href="https://laravel-for-newbie.kejyun.com/zh/tags/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://laravel-for-newbie.kejyun.com/en/tags/"
+                />
+  </url><url>
+    <loc>https://laravel-for-newbie.kejyun.com/en/tags/timestamp/</loc>
+    <lastmod>2021-08-31T08:50:29+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link
+                rel="alternate"
+                hreflang="zh"
+                href="https://laravel-for-newbie.kejyun.com/zh/tags/timestamp/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://laravel-for-newbie.kejyun.com/en/tags/timestamp/"
+                />
+  </url><url>
+    <loc>https://laravel-for-newbie.kejyun.com/en/categories/timestamp/</loc>
+    <lastmod>2021-08-31T08:50:29+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link
+                rel="alternate"
+                hreflang="zh"
+                href="https://laravel-for-newbie.kejyun.com/zh/categories/timestamp/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://laravel-for-newbie.kejyun.com/en/categories/timestamp/"
+                />
+  </url><url>
+    <loc>https://laravel-for-newbie.kejyun.com/en/tags/timestamptz/</loc>
+    <lastmod>2021-08-31T08:50:29+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link
+                rel="alternate"
+                hreflang="zh"
+                href="https://laravel-for-newbie.kejyun.com/zh/tags/timestamptz/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://laravel-for-newbie.kejyun.com/en/tags/timestamptz/"
+                />
+  </url><url>
+    <loc>https://laravel-for-newbie.kejyun.com/en/categories/timestamptz/</loc>
+    <lastmod>2021-08-31T08:50:29+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link
+                rel="alternate"
+                hreflang="zh"
+                href="https://laravel-for-newbie.kejyun.com/zh/categories/timestamptz/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://laravel-for-newbie.kejyun.com/en/categories/timestamptz/"
                 />
   </url><url>
     <loc>https://laravel-for-newbie.kejyun.com/en/tags/docker/</loc>
@@ -92,61 +332,6 @@
                 href="https://laravel-for-newbie.kejyun.com/en/categories/docker/"
                 />
   </url><url>
-    <loc>https://laravel-for-newbie.kejyun.com/en/tags/documentation/</loc>
-    <lastmod>2021-08-24T08:50:29+08:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url><url>
-    <loc>https://laravel-for-newbie.kejyun.com/en/categories/documentation/</loc>
-    <lastmod>2021-08-24T08:50:29+08:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url><url>
-    <loc>https://laravel-for-newbie.kejyun.com/en/tags/laravel/</loc>
-    <lastmod>2021-08-24T08:50:29+08:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-    <xhtml:link
-                rel="alternate"
-                hreflang="zh"
-                href="https://laravel-for-newbie.kejyun.com/zh/tags/laravel/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="en"
-                href="https://laravel-for-newbie.kejyun.com/en/tags/laravel/"
-                />
-  </url><url>
-    <loc>https://laravel-for-newbie.kejyun.com/en/categories/laravel/</loc>
-    <lastmod>2021-08-24T08:50:29+08:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-    <xhtml:link
-                rel="alternate"
-                hreflang="zh"
-                href="https://laravel-for-newbie.kejyun.com/zh/categories/laravel/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="en"
-                href="https://laravel-for-newbie.kejyun.com/en/categories/laravel/"
-                />
-  </url><url>
-    <loc>https://laravel-for-newbie.kejyun.com/en/</loc>
-    <lastmod>2021-08-24T08:50:29+08:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-    <xhtml:link
-                rel="alternate"
-                hreflang="zh"
-                href="https://laravel-for-newbie.kejyun.com/zh/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="en"
-                href="https://laravel-for-newbie.kejyun.com/en/"
-                />
-  </url><url>
     <loc>https://laravel-for-newbie.kejyun.com/en/tags/scheduling/</loc>
     <lastmod>2021-08-24T08:50:29+08:00</lastmod>
     <changefreq>weekly</changefreq>
@@ -175,31 +360,6 @@
                 rel="alternate"
                 hreflang="en"
                 href="https://laravel-for-newbie.kejyun.com/en/categories/scheduling/"
-                />
-  </url><url>
-    <loc>https://laravel-for-newbie.kejyun.com/en/tags/scratch/</loc>
-    <lastmod>2021-08-24T08:50:29+08:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url><url>
-    <loc>https://laravel-for-newbie.kejyun.com/en/categories/scratch/</loc>
-    <lastmod>2021-08-24T08:50:29+08:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url><url>
-    <loc>https://laravel-for-newbie.kejyun.com/en/tags/</loc>
-    <lastmod>2021-08-24T08:50:29+08:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-    <xhtml:link
-                rel="alternate"
-                hreflang="zh"
-                href="https://laravel-for-newbie.kejyun.com/zh/tags/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="en"
-                href="https://laravel-for-newbie.kejyun.com/en/tags/"
                 />
   </url><url>
     <loc>https://laravel-for-newbie.kejyun.com/en/tags/%E6%95%99%E5%AD%B8%E6%96%87%E4%BB%B6/</loc>

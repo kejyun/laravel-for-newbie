@@ -5,7 +5,7 @@
     <description>Recent content in advanced on Laravel for newbie</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh</language>
-    <lastBuildDate>Tue, 24 Aug 2021 08:50:29 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 31 Aug 2021 08:50:29 +0800</lastBuildDate>
     
 	  <atom:link href="https://laravel-for-newbie.kejyun.com/en/tags/advanced/index.xml" rel="self" type="application/rss+xml" />
     
@@ -16,15 +16,164 @@
     
     
     <item>
-      <title>Advanced: scheduling</title>
-      <link>https://laravel-for-newbie.kejyun.com/en/advanced/scheduling/</link>
-      <pubDate>Fri, 20 Aug 2021 08:50:29 +0800</pubDate>
+      <title>Advanced: PostgreSQL timestamp &amp; timestampTz</title>
+      <link>https://laravel-for-newbie.kejyun.com/en/advanced/database/postgresql-timestamp-timestamptz/</link>
+      <pubDate>Tue, 31 Aug 2021 08:50:29 +0800</pubDate>
       
-      <guid>https://laravel-for-newbie.kejyun.com/en/advanced/scheduling/</guid>
+      <guid>https://laravel-for-newbie.kejyun.com/en/advanced/database/postgresql-timestamp-timestamptz/</guid>
       <description>
         
         
-        &lt;h1 id=&#34;scheduling&#34;&gt;Scheduling&lt;/h1&gt;
+        &lt;h2 id=&#34;compare-column-type&#34;&gt;Compare column type&lt;/h2&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Type&lt;/th&gt;
+&lt;th&gt;Size&lt;/th&gt;
+&lt;th&gt;Min value&lt;/th&gt;
+&lt;th&gt;Max value&lt;/th&gt;
+&lt;th&gt;Description&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;timestamp&lt;/td&gt;
+&lt;td&gt;8 bytes&lt;/td&gt;
+&lt;td&gt;4713 BC&lt;/td&gt;
+&lt;td&gt;294276 AD&lt;/td&gt;
+&lt;td&gt;no timezone&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;timestampTz&lt;/td&gt;
+&lt;td&gt;8 bytes&lt;/td&gt;
+&lt;td&gt;4713 BC&lt;/td&gt;
+&lt;td&gt;294276 AD&lt;/td&gt;
+&lt;td&gt;with timezone&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2 id=&#34;create-timestamptz-time-data&#34;&gt;Create timestampTz time data&lt;/h2&gt;
+&lt;p&gt;Instead of just using &lt;code&gt;Carbon Object&lt;/code&gt; or &lt;code&gt;Y-m-d H:i:s&lt;/code&gt; format time data to &lt;code&gt;timestampTz&lt;/code&gt;. You should add timezone info at your time data when you create time data into the database, such as &lt;code&gt;Y-m-d H:i:sP&lt;/code&gt; format time data. Otherwise the default timezone will be GMT+0 without timezone info.&lt;/p&gt;
+&lt;p&gt;You can specify the timezone information in your date to get the correct time range that you want.&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Type&lt;/th&gt;
+&lt;th&gt;Data&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Carbon Object&lt;/td&gt;
+&lt;td&gt;2020-12-25 14:31:00&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;time format Y-m-d H:i:s&lt;/td&gt;
+&lt;td&gt;2020-12-25 14:31:00&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;time format Y-m-d H:i:sP&lt;/td&gt;
+&lt;td&gt;2020-12-25 14:31:00+08:00&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-php&#34; data-lang=&#34;php&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;// Transforom time to Carbon Object
+&lt;/span&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;$TimeAtCarbon&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;Carbon&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;::&lt;/span&gt;&lt;span style=&#34;color:#c4a000&#34;&gt;parse&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;$time_at&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;);&lt;/span&gt;
+
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;// Set create data
+&lt;/span&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;$timezone_data&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;[&lt;/span&gt;
+    &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#39;time_at_timezone&amp;#39;&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;$TimeAtCarbon&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;-&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#c4a000&#34;&gt;format&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#39;Y-m-d H:i:sP&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;),&lt;/span&gt;
+&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;];&lt;/span&gt;
+
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;// Insert data to Database
+&lt;/span&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;TimezoneTest&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;::&lt;/span&gt;&lt;span style=&#34;color:#c4a000&#34;&gt;create&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;$timezone_data&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;);&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You can use &lt;code&gt;$TimeAtCarbon-&amp;gt;toDateTimeString()&lt;/code&gt; to get time, and &lt;code&gt;$TimeAtCarbon-&amp;gt;getTimezone()-&amp;gt;toOffsetTimeZone()&lt;/code&gt; to get timezone. It makes your code more readable.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-php&#34; data-lang=&#34;php&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;// Transforom time to Carbon Object
+&lt;/span&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;$TimeAtCarbon&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;Carbon&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;::&lt;/span&gt;&lt;span style=&#34;color:#c4a000&#34;&gt;parse&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;$time_at&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;);&lt;/span&gt;
+
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;// Set create data
+&lt;/span&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;$timezone_data&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;[&lt;/span&gt;
+    &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#39;time_at_timezone&amp;#39;&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;$TimeAtCarbon&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;-&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#c4a000&#34;&gt;toDateTimeString&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;()&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;.&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;$TimeAtCarbon&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;-&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#c4a000&#34;&gt;getTimezone&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;()&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;-&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#c4a000&#34;&gt;toOffsetTimeZone&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(),&lt;/span&gt;
+&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;];&lt;/span&gt;
+
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;// Insert data to Database
+&lt;/span&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;TimezoneTest&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;::&lt;/span&gt;&lt;span style=&#34;color:#c4a000&#34;&gt;create&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;$timezone_data&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;);&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The default &lt;code&gt;timestampTz&lt;/code&gt; data format will be &lt;code&gt;GMT+0&lt;/code&gt;, so if you save &lt;code&gt;2020-12-30 14:31:00+08:00&lt;/code&gt; with &lt;code&gt;GMT+8&lt;/code&gt; format to your database. Then it will store as &lt;code&gt;2020-12-30 06:31:00+00:00&lt;/code&gt;.&lt;/p&gt;
+&lt;h2 id=&#34;select-timestamptz-data&#34;&gt;Select timestampTz data&lt;/h2&gt;
+&lt;p&gt;You have to specify the correct &lt;code&gt;timezone&lt;/code&gt; in your time select conditions. Otherwise, the PostgreSQL will use &lt;code&gt;GMT+0&lt;/code&gt; to get your &lt;code&gt;timestampTz&lt;/code&gt; data while selection.&lt;/p&gt;
+&lt;p&gt;When you specify the correct &lt;code&gt;timezone&lt;/code&gt; data that you want. No matter what timezone that you want. You will always get the correct data.&lt;/p&gt;
+&lt;p&gt;So the &lt;code&gt;2020-12-30 14:31:00+08:00&lt;/code&gt; and &lt;code&gt;2020-12-30 06:31:00+00:00&lt;/code&gt; will get the some result.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-php&#34; data-lang=&#34;php&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;// Time setting
+&lt;/span&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;$time_start_at&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#39;2020-12-30 14:31:00+08:00&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;;&lt;/span&gt; &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;// 2020-12-30 06:31:00+00:00
+&lt;/span&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;$time_end_at&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#39;2021-01-01 14:31:00+08:00&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;;&lt;/span&gt;   &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;// 2021-01-01 06:31:00+00:00
+&lt;/span&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;// Transform time to Carbon Object
+&lt;/span&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;$TimeStartAtCarbon&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;Carbon&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;::&lt;/span&gt;&lt;span style=&#34;color:#c4a000&#34;&gt;parse&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;$time_start_at&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;);&lt;/span&gt;
+&lt;span style=&#34;color:#000&#34;&gt;$TimeEndAtCarbon&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;Carbon&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;::&lt;/span&gt;&lt;span style=&#34;color:#c4a000&#34;&gt;parse&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;$time_end_at&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;);&lt;/span&gt;
+
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;// Setting time with timezone
+&lt;/span&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;// 2020-12-30 14:31:00+08:00
+&lt;/span&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;$time_start_at_timezone&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;$TimeStartAtCarbon&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;-&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#c4a000&#34;&gt;toDateTimeString&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;()&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;.&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;$TimeStartAtCarbon&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;-&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#c4a000&#34;&gt;getTimezone&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;()&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;-&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#c4a000&#34;&gt;toOffsetTimeZone&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;();&lt;/span&gt;
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;// 2020-01-01 14:31:00+08:00
+&lt;/span&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;$time_end_at_timezone&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;$TimeEndAtCarbon&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;-&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#c4a000&#34;&gt;toDateTimeString&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;()&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;.&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;$TimeEndAtCarbon&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;-&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#c4a000&#34;&gt;getTimezone&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;()&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;-&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#c4a000&#34;&gt;toOffsetTimeZone&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;();&lt;/span&gt;
+
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;// select * from &amp;#34;timezone_test&amp;#34; where &amp;#34;time_at_timezone&amp;#34; &amp;gt;= &amp;#39;2020-12-30 14:31:00+08:00&amp;#39; and &amp;#34;time_at_timezone&amp;#34; &amp;lt;= &amp;#39;2020-01-01 14:31:00+08:00&amp;#39;
+&lt;/span&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;$TimezoneTestCollection&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;TimezoneTest&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;::&lt;/span&gt;&lt;span style=&#34;color:#c4a000&#34;&gt;where&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#39;time_at_timezone&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#39;&amp;gt;=&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;$time_start_at_timezone&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;)&lt;/span&gt;
+    &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;-&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#c4a000&#34;&gt;where&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#39;time_at_timezone&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#39;&amp;lt;=&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;$time_end_at_timezone&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;)&lt;/span&gt;
+    &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;-&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#c4a000&#34;&gt;get&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;();&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;using-carbon-to-transform-your-timezone&#34;&gt;Using Carbon to transform your timezone&lt;/h2&gt;
+&lt;p&gt;The official documentation told us to use &lt;code&gt;setTimezone(&#39;UTC&#39;)&lt;/code&gt; or &lt;code&gt;utc()&lt;/code&gt; to transform time to &lt;code&gt;UTC&lt;/code&gt; format. But it will go wrong when I change my system time from &lt;code&gt;UTC&lt;/code&gt; to &lt;code&gt;Asia/Taipei&lt;/code&gt;.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-php&#34; data-lang=&#34;php&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;// Transform to UTC
+&lt;/span&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;$CarbonTime&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;-&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#c4a000&#34;&gt;setTimezone&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#39;UTC&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;);&lt;/span&gt;
+&lt;span style=&#34;color:#000&#34;&gt;$CarbonTime&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;-&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#c4a000&#34;&gt;utc&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;();&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;So it&amp;rsquo;s highly recommended you use &lt;code&gt;setTimezone(&#39;GMT+0&#39;)&lt;/code&gt; to change your timezone format directly. Then the result of the transform will be correct.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-php&#34; data-lang=&#34;php&#34;&gt;&lt;span style=&#34;color:#000&#34;&gt;$CarbonTime&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;-&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#c4a000&#34;&gt;setTimezone&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#39;GMT+0&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;);&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;transform-timestamp-format-to-timestamptz&#34;&gt;Transform timestamp format to timestampTz&lt;/h2&gt;
+&lt;p&gt;The timestamp format will not include timezone information. The timezone date will be decided by your system or your code.&lt;/p&gt;
+&lt;p&gt;So when your save the &lt;code&gt;timestampTz&lt;/code&gt; format data, &lt;code&gt;2020-12-25 14:31:00+08:00&lt;/code&gt;, to &lt;code&gt;timestamp&lt;/code&gt; format. The data storage will just &lt;code&gt;2020-12-25 14:31:00&lt;/code&gt; and not include timezone information. So the timezone it will depends on your system or your code.&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Type&lt;/th&gt;
+&lt;th&gt;Data&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;timestampTz&lt;/td&gt;
+&lt;td&gt;2020-12-25 14:31:00+08:00&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;timestamp&lt;/td&gt;
+&lt;td&gt;2020-12-25 14:31:00&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2 id=&#34;timestamptz-feature&#34;&gt;timestampTz feature&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;You can specify the timezone that you want to get the correct time range of the data
+&lt;ul&gt;
+&lt;li&gt;Taipei Times: 2020-12-25 14:31:00+08:00&lt;/li&gt;
+&lt;li&gt;Bangkok Times: 2020-12-25 14:31:00+07:00&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Timezone information will be in the database not depends on the system or code.
+&lt;ul&gt;
+&lt;li&gt;Using &lt;code&gt;timestamp&lt;/code&gt; without timezone will be a disaster while you want to change your timezone from your system or code.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;You still can show the correct time in right timezone&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;reference&#34;&gt;Reference&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.postgresqltutorial.com/postgresql-timestamp/&#34;&gt;Understanding PostgreSQL Timestamp Data Types&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://docs.postgresql.tw/the-sql-language/data-types/date-time&#34;&gt;8.5. 日期時間型別 - PostgreSQL 正體中文使用手冊&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.epochconverter.com/timezones?iframe=true&amp;amp;width=100%25&amp;amp;height=100%25&#34;&gt;Time zone list / Epoch to time zone converter&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.php.net/manual/en/datetime.format.php&#34;&gt;PHP: DateTime::format - Manual&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://laracasts.com/discuss/channels/laravel/carbon-postgres-timestamp-with-timezone-and-dates&#34;&gt;Carbon, Postgres timestamp with timezone and Dates&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://stackoverflow.com/questions/52774094/laravel-whats-the-difference-between-timestamp-and-timestamptz&#34;&gt;Laravel - What&amp;rsquo;s the difference between timestamp() and timestampTz()? - Stack Overflow&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://carbon.nesbot.com/docs/#api-timezone&#34;&gt;Time zone list / Epoch to time zone converter&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://blog.wu-boy.com/2018/09/converting-timestamp-to-timestamp-in-a-specific-time-zone-in-postgres/&#34;&gt;Carbon - A simple PHP API extension for DateTime.&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
 
       </description>
     </item>
@@ -96,6 +245,33 @@
 &lt;li&gt;&lt;a href=&#34;https://www.youtube.com/watch?v=2UTHJpBRGpY&#34;&gt;Task Scheduling - Laravel - The PHP Framework For Web Artisans&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://learnku.com/articles/7022/using-laravel-schedule-in-docker&#34;&gt;在 Docker 中使用 Laravel schedule | Laravel China 社区&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      <title>Advanced: Database</title>
+      <link>https://laravel-for-newbie.kejyun.com/en/advanced/database/</link>
+      <pubDate>Tue, 31 Aug 2021 08:50:29 +0800</pubDate>
+      
+      <guid>https://laravel-for-newbie.kejyun.com/en/advanced/database/</guid>
+      <description>
+        
+        
+        
+      </description>
+    </item>
+    
+    <item>
+      <title>Advanced: scheduling</title>
+      <link>https://laravel-for-newbie.kejyun.com/en/advanced/scheduling/</link>
+      <pubDate>Fri, 20 Aug 2021 08:50:29 +0800</pubDate>
+      
+      <guid>https://laravel-for-newbie.kejyun.com/en/advanced/scheduling/</guid>
+      <description>
+        
+        
+        &lt;h1 id=&#34;scheduling&#34;&gt;Scheduling&lt;/h1&gt;
 
       </description>
     </item>

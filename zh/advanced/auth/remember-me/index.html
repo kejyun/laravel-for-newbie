@@ -200,7 +200,7 @@ if (!doNotTrack) {
 		],
 		"genre":["KJ"],
 		"articleSection": "KJ",
-		"articleBody": "一般登入流程 傳統登入方式是透過帳號密碼登入後，透過 cookie 中的 session_id 去與 Server 的 session 資料去做比對，如果有比對到 session 資料的話，會從儲存在 session 中的使用者編號，去資料庫或快取撈取使用者的資料，以達到登入該使用者的流程\n   步驟 流程 用途     1 傳入帳號密碼驗證 驗證帳號密碼是否正確，資料庫是否有此帳號   2 記錄使用者資料及 session_id 到 Session 將登入使用者的資料儲存在 Session，之後其他 Request 可以直接取用，避免敏感資料讓其他使用者資料   3 記錄使用者 session_id 到 Cookie 告訴前端此使用者的身份是誰，之後會透過這個含有 session_id 的 cookie 做驗證   4 透過 session_id 的 Cookie 做其他驗證請求 撈取 Cookie 中的 session_id 驗證 Server 的 Session 是否有此 session_id，沒有的話則表示未登入    帳號登入必要條件 要確認帳號有登入有兩個條件\n 使用者含有 session_id 的 Cookie 存在瀏覽器 Server 的 Session 中有此 session_id  要確保 Client 端的含有 session_id 的 Cookie 一直存在，這樣 Server 才能有 session_id 資料去做驗證\n而且 Server 的 Session 有此 session_id 的使用者資料\nSession 限制 因為 Cookie 是存在使用者自己的瀏覽器端，所以要確保 Client 端的含有 session_id 的 Cookie 一直存在比較容易，看系統安全性的情境，可以將 Cookie 的過期時間設定很長即可，例如 1 年、3 年、5 年之類的，因為存再久也只是存在使用者自己的瀏覽器，對於 Server 是幾乎沒有任何負擔的\n 額外的負擔應該就是每次 Request 都會把 cookie 傳送到 Server，Cookie 越多的話，每個 Request 需要傳送的資料就會越多，造成 Request 變得比較肥大，但這個就是取捨\n 但 Session 因為是存放在 Server 端，所以如果要完整地將使用者資料保留 1 年、3 年、5 年之類的負擔會很大，如果使用者一年只登入一次，我們卻要將他資料保留這麼久都沒用到，而當使用者越來越多達到百萬千萬級時，一個 Session 檔案雖然只有幾 k，但一乘以百萬千萬來說，對於硬體的儲存負擔還是很大的\n所以 Session 的資料通常會依照使用者的情境，不會將 Session 儲存太久\n\r記住登入帳號 為了減輕 Server 儲存 Session 的壓力，會在使用者資料表加入一個 remember_token 的欄位，當作幫使用者做重新產生 Session 登入的動作，所以登入流程會變成\n   步驟 流程 用途     1 傳入帳號密碼驗證 驗證帳號密碼是否正確，資料庫是否有此帳號   2 記錄使用者資料及 session_id 到 Session 將登入使用者的資料儲存在 Session，之後其他 Request 可以直接取用，避免敏感資料讓其他使用者資料   3 記錄使用者 session_id 到 Cookie 告訴前端此使用者的身份是誰，之後會透過這個含有 session_id 的 cookie 做驗證   4 產生新的 remember_token 記錄到使用者資料表的 remember_token 欄位 做為之後驗證重新登入用   5 記錄使用者 remember_token 及 user_id 到 Cookie 當 Cookie 中的 session_id 找不到 Session 時，會用 user_id 及 remember_token 去驗證登入   6 透過 session_id 的 Cookie 做其他驗證請求 撈取 Cookie 中的 session_id 驗證 Server 的 Session 是否有此 session_id，沒有的話則表示未登入   7 透過 remember_token 及 user_id 的 Cookie 做重新登入 撈取 Cookie 中的 remember_token 及 user_id，與資料庫做比對，確認是否 token 合法可以正常登入，登入成功重新產生 Session    當 Session 保留時間很短時（例如 20 分鐘），在 Session 移除時，也可以透過 remember_token 的 Cookie 去驗重新登入的動作，並重新產生使用者的 Session，確保存放在 Server 中的 Session 都是近期登入的活躍使用者，確保不會有沒在使用的 Session，也可以讓使用者可以正常登入\nremember_token 安全性 因為只要 Cookie 過期時間設定的夠長，只要一直有 remember_token，則使用者就可以一直無限期的一直不斷的維持登入狀態，這樣可能會有安全性的問題，所以在使用者自己觸發登出時，記得更新儲存在資料庫的 remember_token，讓其他有此 remember_token 的使用者無法繼續登入\n\r以 Laravel 記住登入舉例  Laravel 版本 8.x\n 登入紀錄登入帳號 在 Laravel 原生記錄使用者 vendor\/laravel\/framework\/src\/Illuminate\/Auth\/SessionGuard.php 程式中，在 login() 函式的第二個參數是 $remember = false，若傳入 true 則會對使用者進行記錄登入帳號 token 的流程\n\/\/ vendor\/laravel\/framework\/src\/Illuminate\/Auth\/SessionGuard.php \/** * Log a user into the application. * * @param \\Illuminate\\Contracts\\Auth\\Authenticatable $user * @param bool $remember * @return void *\/ public function login(AuthenticatableContract $user, $remember = false) { \/\/ If the user should be permanently \u0026#34;remembered\u0026#34; by the application we will  \/\/ queue a permanent cookie that contains the encrypted copy of the user  \/\/ identifier. We will then decrypt this later to retrieve the users.  if ($remember) { \/\/ 確保資料庫有此 remember_token，若沒有則產生新的  $this-\u0026gt;ensureRememberTokenIsSet($user); \/\/ 紀錄 remember_token 到 cookie  $this-\u0026gt;queueRecallerCookie($user); } } 在 ensureRememberTokenIsSet() 函式會確保資料庫有產生 remember_token，如果沒有的話則會重新產生一個 remember_token 儲存至資料庫\n產生完 remember_token 後，則呼叫 queueRecallerCookie() 紀錄 remember_token 到 cookie\n紀錄 Remember Token 的 Cookie 在 Laravel 原生記錄 Remember Token vendor\/laravel\/framework\/src\/Illuminate\/Auth\/SessionGuard.php 程式中，在 queueRecallerCookie() 會紀錄此 Rememver Token\n 第 1 個變數 $user-\u0026gt;getAuthIdentifier() 是 user_id 第 2 個變數 $user-\u0026gt;getRememberToken() 是資料庫的 remember_token 第 3 個變數 $user-\u0026gt;getAuthPassword() 是使用的密碼   第 3 個參數在 Laravel 8.x 版本都沒有用到，不確定紀錄這個用途是要幹嘛\n \/\/ vendor\/laravel\/framework\/src\/Illuminate\/Auth\/SessionGuard.php \/** * Queue the recaller cookie into the cookie jar. * * @param \\Illuminate\\Contracts\\Auth\\Authenticatable $user * @return void *\/ protected function queueRecallerCookie(AuthenticatableContract $user) { $this-\u0026gt;getCookieJar()-\u0026gt;queue($this-\u0026gt;createRecaller( $user-\u0026gt;getAuthIdentifier().\u0026#39;|\u0026#39;.$user-\u0026gt;getRememberToken().\u0026#39;|\u0026#39;.$user-\u0026gt;getAuthPassword() )); } 取得驗證使用者資料 在使用 auth()-\u0026gt;user() 撈取登入使用者資料時，會先使用 Session 試著撈取登入使用者的資料，當撈取不到 Session 中使用者的資料時，如果有 Remember Token，則會使用 Remember Token 去做登入\n\/\/ vendor\/laravel\/framework\/src\/Illuminate\/Auth\/SessionGuard.php \/** * Get the currently authenticated user. * * @return \\Illuminate\\Contracts\\Auth\\Authenticatable|null *\/ public function user() { \/\/ 取得 Session 中的使用者編號，使用 Session 登入  $id = $this-\u0026gt;session-\u0026gt;get($this-\u0026gt;getName()); \/\/ First we will try to load the user using the identifier in the session if  \/\/ one exists. Otherwise we will check for a \u0026#34;remember me\u0026#34; cookie in this  \/\/ request, and if one exists, attempt to retrieve the user using that.  if (! is_null($id) \u0026amp;\u0026amp; $this-\u0026gt;user = $this-\u0026gt;provider-\u0026gt;retrieveById($id)) { $this-\u0026gt;fireAuthenticatedEvent($this-\u0026gt;user); } \/\/ 使用 Remember Token 登入使用者（如果有的話）  \/\/ If the user is null, but we decrypt a \u0026#34;recaller\u0026#34; cookie we can attempt to  \/\/ pull the user data on that cookie which serves as a remember cookie on  \/\/ the application. Once we have a user we can return it to the caller.  if (is_null($this-\u0026gt;user) \u0026amp;\u0026amp; ! is_null($recaller = $this-\u0026gt;recaller())) { $this-\u0026gt;user = $this-\u0026gt;userFromRecaller($recaller); if ($this-\u0026gt;user) { $this-\u0026gt;updateSession($this-\u0026gt;user-\u0026gt;getAuthIdentifier()); $this-\u0026gt;fireLoginEvent($this-\u0026gt;user, true); } } return $this-\u0026gt;user; } 參考資料  security - What is the best way to implement \u0026ldquo;remember me\u0026rdquo; for a website? - Stack Overflow Implementing Secure User Authentication in PHP Applications with Long-Term Persistence (Login with \u0026ldquo;Remember Me\u0026rdquo; Cookies) - Paragon Initiative Enterprises Blog Authentication - Laravel - The PHP Framework For Web Artisans session、cookie與\u0026quot;記住我的登入狀態\u0026quot;的功能的實現 | 程式前沿  "
+		"articleBody": "一般登入流程 傳統登入方式是透過帳號密碼登入後，透過 cookie 中的 session_id 去與 Server 的 session 資料去做比對，如果有比對到 session 資料的話，會從儲存在 session 中的使用者編號，去資料庫或快取撈取使用者的資料，以達到登入該使用者的流程\n   步驟 流程 用途     1 傳入帳號密碼驗證 驗證帳號密碼是否正確，資料庫是否有此帳號   2 記錄使用者資料及 session_id 到 Session 將登入使用者的資料儲存在 Session，之後其他 Request 可以直接取用，避免敏感資料讓其他使用者資料   3 記錄使用者 session_id 到 Cookie 告訴前端此使用者的身份是誰，之後會透過這個含有 session_id 的 cookie 做驗證   4 透過 session_id 的 Cookie 做其他驗證請求 撈取 Cookie 中的 session_id 驗證 Server 的 Session 是否有此 session_id，沒有的話則表示未登入    帳號登入必要條件 要確認帳號有登入有兩個條件\n 使用者含有 session_id 的 Cookie 存在瀏覽器 Server 的 Session 中有此 session_id  要確保 Client 端的含有 session_id 的 Cookie 一直存在，這樣 Server 才能有 session_id 資料去做驗證\n而且 Server 的 Session 有此 session_id 的使用者資料\nSession 限制 因為 Cookie 是存在使用者自己的瀏覽器端，所以要確保 Client 端的含有 session_id 的 Cookie 一直存在比較容易，看系統安全性的情境，可以將 Cookie 的過期時間設定很長即可，例如 1 年、3 年、5 年之類的，因為存再久也只是存在使用者自己的瀏覽器，對於 Server 是幾乎沒有任何負擔的\n 額外的負擔應該就是每次 Request 都會把 cookie 傳送到 Server，Cookie 越多的話，每個 Request 需要傳送的資料就會越多，造成 Request 變得比較肥大，但這個就是取捨\n 但 Session 因為是存放在 Server 端，所以如果要完整地將使用者資料保留 1 年、3 年、5 年之類的負擔會很大，如果使用者一年只登入一次，我們卻要將他資料保留這麼久都沒用到，而當使用者越來越多達到百萬千萬級時，一個 Session 檔案雖然只有幾 k，但一乘以百萬千萬來說，對於硬體的儲存負擔還是很大的\n所以 Session 的資料通常會依照使用者的情境，不會將 Session 儲存太久\n 記住登入帳號 為了減輕 Server 儲存 Session 的壓力，會在使用者資料表加入一個 remember_token 的欄位，當作幫使用者做重新產生 Session 登入的動作，所以登入流程會變成\n   步驟 流程 用途     1 傳入帳號密碼驗證 驗證帳號密碼是否正確，資料庫是否有此帳號   2 記錄使用者資料及 session_id 到 Session 將登入使用者的資料儲存在 Session，之後其他 Request 可以直接取用，避免敏感資料讓其他使用者資料   3 記錄使用者 session_id 到 Cookie 告訴前端此使用者的身份是誰，之後會透過這個含有 session_id 的 cookie 做驗證   4 產生新的 remember_token 記錄到使用者資料表的 remember_token 欄位 做為之後驗證重新登入用   5 記錄使用者 remember_token 及 user_id 到 Cookie 當 Cookie 中的 session_id 找不到 Session 時，會用 user_id 及 remember_token 去驗證登入   6 透過 session_id 的 Cookie 做其他驗證請求 撈取 Cookie 中的 session_id 驗證 Server 的 Session 是否有此 session_id，沒有的話則表示未登入   7 透過 remember_token 及 user_id 的 Cookie 做重新登入 撈取 Cookie 中的 remember_token 及 user_id，與資料庫做比對，確認是否 token 合法可以正常登入，登入成功重新產生 Session    當 Session 保留時間很短時（例如 20 分鐘），在 Session 移除時，也可以透過 remember_token 的 Cookie 去驗重新登入的動作，並重新產生使用者的 Session，確保存放在 Server 中的 Session 都是近期登入的活躍使用者，確保不會有沒在使用的 Session，也可以讓使用者可以正常登入\nremember_token 安全性 因為只要 Cookie 過期時間設定的夠長，只要一直有 remember_token，則使用者就可以一直無限期的一直不斷的維持登入狀態，這樣可能會有安全性的問題，所以在使用者自己觸發登出時，記得更新儲存在資料庫的 remember_token，讓其他有此 remember_token 的使用者無法繼續登入\n 以 Laravel 記住登入舉例  Laravel 版本 8.x\n 登入紀錄登入帳號 在 Laravel 原生記錄使用者 vendor\/laravel\/framework\/src\/Illuminate\/Auth\/SessionGuard.php 程式中，在 login() 函式的第二個參數是 $remember = false，若傳入 true 則會對使用者進行記錄登入帳號 token 的流程\n\/\/ vendor\/laravel\/framework\/src\/Illuminate\/Auth\/SessionGuard.php \/** * Log a user into the application. * * @param \\Illuminate\\Contracts\\Auth\\Authenticatable $user * @param bool $remember * @return void *\/ public function login(AuthenticatableContract $user, $remember = false) { \/\/ If the user should be permanently \u0026#34;remembered\u0026#34; by the application we will  \/\/ queue a permanent cookie that contains the encrypted copy of the user  \/\/ identifier. We will then decrypt this later to retrieve the users.  if ($remember) { \/\/ 確保資料庫有此 remember_token，若沒有則產生新的  $this-\u0026gt;ensureRememberTokenIsSet($user); \/\/ 紀錄 remember_token 到 cookie  $this-\u0026gt;queueRecallerCookie($user); } } 在 ensureRememberTokenIsSet() 函式會確保資料庫有產生 remember_token，如果沒有的話則會重新產生一個 remember_token 儲存至資料庫\n產生完 remember_token 後，則呼叫 queueRecallerCookie() 紀錄 remember_token 到 cookie\n紀錄 Remember Token 的 Cookie 在 Laravel 原生記錄 Remember Token vendor\/laravel\/framework\/src\/Illuminate\/Auth\/SessionGuard.php 程式中，在 queueRecallerCookie() 會紀錄此 Rememver Token\n 第 1 個變數 $user-\u0026gt;getAuthIdentifier() 是 user_id 第 2 個變數 $user-\u0026gt;getRememberToken() 是資料庫的 remember_token 第 3 個變數 $user-\u0026gt;getAuthPassword() 是使用的密碼   第 3 個參數在 Laravel 8.x 版本都沒有用到，不確定紀錄這個用途是要幹嘛\n \/\/ vendor\/laravel\/framework\/src\/Illuminate\/Auth\/SessionGuard.php \/** * Queue the recaller cookie into the cookie jar. * * @param \\Illuminate\\Contracts\\Auth\\Authenticatable $user * @return void *\/ protected function queueRecallerCookie(AuthenticatableContract $user) { $this-\u0026gt;getCookieJar()-\u0026gt;queue($this-\u0026gt;createRecaller( $user-\u0026gt;getAuthIdentifier().\u0026#39;|\u0026#39;.$user-\u0026gt;getRememberToken().\u0026#39;|\u0026#39;.$user-\u0026gt;getAuthPassword() )); } 取得驗證使用者資料 在使用 auth()-\u0026gt;user() 撈取登入使用者資料時，會先使用 Session 試著撈取登入使用者的資料，當撈取不到 Session 中使用者的資料時，如果有 Remember Token，則會使用 Remember Token 去做登入\n\/\/ vendor\/laravel\/framework\/src\/Illuminate\/Auth\/SessionGuard.php \/** * Get the currently authenticated user. * * @return \\Illuminate\\Contracts\\Auth\\Authenticatable|null *\/ public function user() { \/\/ 取得 Session 中的使用者編號，使用 Session 登入  $id = $this-\u0026gt;session-\u0026gt;get($this-\u0026gt;getName()); \/\/ First we will try to load the user using the identifier in the session if  \/\/ one exists. Otherwise we will check for a \u0026#34;remember me\u0026#34; cookie in this  \/\/ request, and if one exists, attempt to retrieve the user using that.  if (! is_null($id) \u0026amp;\u0026amp; $this-\u0026gt;user = $this-\u0026gt;provider-\u0026gt;retrieveById($id)) { $this-\u0026gt;fireAuthenticatedEvent($this-\u0026gt;user); } \/\/ 使用 Remember Token 登入使用者（如果有的話）  \/\/ If the user is null, but we decrypt a \u0026#34;recaller\u0026#34; cookie we can attempt to  \/\/ pull the user data on that cookie which serves as a remember cookie on  \/\/ the application. Once we have a user we can return it to the caller.  if (is_null($this-\u0026gt;user) \u0026amp;\u0026amp; ! is_null($recaller = $this-\u0026gt;recaller())) { $this-\u0026gt;user = $this-\u0026gt;userFromRecaller($recaller); if ($this-\u0026gt;user) { $this-\u0026gt;updateSession($this-\u0026gt;user-\u0026gt;getAuthIdentifier()); $this-\u0026gt;fireLoginEvent($this-\u0026gt;user, true); } } return $this-\u0026gt;user; } 參考資料  security - What is the best way to implement \u0026ldquo;remember me\u0026rdquo; for a website? - Stack Overflow Implementing Secure User Authentication in PHP Applications with Long-Term Persistence (Login with \u0026ldquo;Remember Me\u0026rdquo; Cookies) - Paragon Initiative Enterprises Blog Authentication - Laravel - The PHP Framework For Web Artisans session、cookie與\u0026quot;記住我的登入狀態\u0026quot;的功能的實現 | 程式前沿  "
 	}
 </script>
 
@@ -425,7 +425,7 @@ if (!doNotTrack) {
   aria-label="搜尋"
   autocomplete="off"
   
-  data-offline-search-index-json-src="/offline-search-index.8eb24d61ce714fc244ce2cce8caf0733.json"
+  data-offline-search-index-json-src="/offline-search-index.b2b2ad9a213d794695cf49c4adc163c5.json"
   data-offline-search-base-href="/"
   data-offline-search-max-results="25"
 >
@@ -461,7 +461,7 @@ if (!doNotTrack) {
   aria-label="搜尋"
   autocomplete="off"
   
-  data-offline-search-index-json-src="/offline-search-index.8eb24d61ce714fc244ce2cce8caf0733.json"
+  data-offline-search-index-json-src="/offline-search-index.b2b2ad9a213d794695cf49c4adc163c5.json"
   data-offline-search-base-href="/"
   data-offline-search-max-results="25"
 >
@@ -513,6 +513,57 @@ if (!doNotTrack) {
     
       
       <ul class="pr-md-3 ul-1">
+        
+          
+            
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  <li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child" id="m-zhadvanceddatabase-li">
+    <a href="/zh/advanced/database/" class="align-left pl-0 pr-2 td-sidebar-link td-sidebar-link__section" id="m-zhadvanceddatabase"><span class="">資料庫</span></a>
+    
+      
+      <ul class="pr-md-3 ul-2">
+        
+          
+            
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  <li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-zhadvanceddatabasepostgresql-timestamp-timestamptz-li">
+    <a href="/zh/advanced/database/postgresql-timestamp-timestamptz/" class="align-left pl-0 pr-2 td-sidebar-link td-sidebar-link__section" id="m-zhadvanceddatabasepostgresql-timestamp-timestamptz"><span class="">PostgreSQL 時間 timestamp &amp; timestampTz</span></a>
+    
+  </li>
+
+          
+        
+      </ul>
+    
+  </li>
+
+          
         
           
             
@@ -959,6 +1010,10 @@ if (!doNotTrack) {
     
     
     <hr class="panel-line">
+        
+            
+        
+            
         
             
         

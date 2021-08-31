@@ -5,7 +5,7 @@
     <description>Recent content in 進階 on Laravel 菜雞修煉場</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh</language>
-    <lastBuildDate>Fri, 20 Aug 2021 08:50:29 +0800</lastBuildDate>
+    <lastBuildDate>Mon, 30 Aug 2021 08:50:29 +0800</lastBuildDate>
     
 	  <atom:link href="https://laravel-for-newbie.kejyun.com/zh/tags/%E9%80%B2%E9%9A%8E/index.xml" rel="self" type="application/rss+xml" />
     
@@ -14,6 +14,168 @@
         
       
     
+    
+    <item>
+      <title>Advanced: PostgreSQL 時間 timestamp &amp; timestampTz</title>
+      <link>https://laravel-for-newbie.kejyun.com/zh/advanced/database/postgresql-timestamp-timestamptz/</link>
+      <pubDate>Mon, 30 Aug 2021 08:50:29 +0800</pubDate>
+      
+      <guid>https://laravel-for-newbie.kejyun.com/zh/advanced/database/postgresql-timestamp-timestamptz/</guid>
+      <description>
+        
+        
+        &lt;h2 id=&#34;欄位比較&#34;&gt;欄位比較&lt;/h2&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;類型&lt;/th&gt;
+&lt;th&gt;儲存空間&lt;/th&gt;
+&lt;th&gt;最小值&lt;/th&gt;
+&lt;th&gt;最大值&lt;/th&gt;
+&lt;th&gt;描述&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;timestamp&lt;/td&gt;
+&lt;td&gt;8 bytes&lt;/td&gt;
+&lt;td&gt;4713 BC&lt;/td&gt;
+&lt;td&gt;294276 AD&lt;/td&gt;
+&lt;td&gt;沒有時區資料&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;timestampTz&lt;/td&gt;
+&lt;td&gt;8 bytes&lt;/td&gt;
+&lt;td&gt;4713 BC&lt;/td&gt;
+&lt;td&gt;294276 AD&lt;/td&gt;
+&lt;td&gt;含有時區資料&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2 id=&#34;新增資料&#34;&gt;新增資料&lt;/h2&gt;
+&lt;p&gt;在新增時間資料的時候，需要將該時間時區資料儲存進去，而不是單純儲存整個 &lt;code&gt;Carbon 物件&lt;/code&gt; 或是 &lt;code&gt;Y-m-d H:i:s&lt;/code&gt;，應該至少要儲存 &lt;code&gt;Y-m-d H:i:sP&lt;/code&gt;，加入時區的資訊，這樣在撈取資料時，就可以使用指定時區的資料去做撈取&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;類型&lt;/th&gt;
+&lt;th&gt;儲存資料&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Carbon 物件&lt;/td&gt;
+&lt;td&gt;2020-12-25 14:31:00&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;時間格式 Y-m-d H:i:s&lt;/td&gt;
+&lt;td&gt;2020-12-25 14:31:00&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;時間格式 Y-m-d H:i:sP&lt;/td&gt;
+&lt;td&gt;2020-12-25 14:31:00+08:00&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-php&#34; data-lang=&#34;php&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;// 轉換資料為 Carbon 物件
+&lt;/span&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;$TimeAtCarbon&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;Carbon&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;::&lt;/span&gt;&lt;span style=&#34;color:#c4a000&#34;&gt;parse&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;$time_at&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;);&lt;/span&gt;
+
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;// 設定新增資料庫資料格式
+&lt;/span&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;$timezone_data&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;[&lt;/span&gt;
+    &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#39;time_at_timezone&amp;#39;&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;$TimeAtCarbon&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;-&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#c4a000&#34;&gt;format&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#39;Y-m-d H:i:sP&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;),&lt;/span&gt;
+&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;];&lt;/span&gt;
+
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;// 新增資料
+&lt;/span&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;TimezoneTest&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;::&lt;/span&gt;&lt;span style=&#34;color:#c4a000&#34;&gt;create&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;$timezone_data&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;);&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;若要用可讀性比較高的程式的話可以用 &lt;code&gt;$TimeAtCarbon-&amp;gt;toDateTimeString()&lt;/code&gt; 取得時間，用 &lt;code&gt;$TimeAtCarbon-&amp;gt;getTimezone()-&amp;gt;toOffsetTimeZone()&lt;/code&gt; 取得時區&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-php&#34; data-lang=&#34;php&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;// 轉換資料為 Carbon 物件
+&lt;/span&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;$TimeAtCarbon&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;Carbon&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;::&lt;/span&gt;&lt;span style=&#34;color:#c4a000&#34;&gt;parse&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;$time_at&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;);&lt;/span&gt;
+
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;// 設定新增資料庫資料格式
+&lt;/span&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;$timezone_data&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;[&lt;/span&gt;
+    &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#39;time_at_timezone&amp;#39;&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;$TimeAtCarbon&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;-&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#c4a000&#34;&gt;toDateTimeString&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;()&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;.&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;$TimeAtCarbon&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;-&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#c4a000&#34;&gt;getTimezone&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;()&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;-&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#c4a000&#34;&gt;toOffsetTimeZone&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(),&lt;/span&gt;
+&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;];&lt;/span&gt;
+
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;// 新增資料
+&lt;/span&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;TimezoneTest&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;::&lt;/span&gt;&lt;span style=&#34;color:#c4a000&#34;&gt;create&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;$timezone_data&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;);&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;時間儲存至 PostgreSQL 預設會是 &lt;code&gt;GMT+0&lt;/code&gt; 的時間，所以若是 &lt;code&gt;2020-12-30 14:31:00+08:00&lt;/code&gt; 的時間，在儲存進去後會存成 &lt;code&gt;2020-12-30 06:31:00+00:00&lt;/code&gt;&lt;/p&gt;
+&lt;h2 id=&#34;撈取資料&#34;&gt;撈取資料&lt;/h2&gt;
+&lt;p&gt;資料庫儲存 &lt;code&gt;timestampTz&lt;/code&gt; 的時間預設是用 &lt;code&gt;GMT+0&lt;/code&gt; 的時間，所以如果要撈取正確時間區間的資料，時間欄位務必要帶入 &lt;code&gt;時區資訊&lt;/code&gt;，否則會預設使用 &lt;code&gt;GMT+0&lt;/code&gt; 的時間撈取資料&lt;/p&gt;
+&lt;p&gt;撈取資料的時間單位只要有指定正確的時區後，這樣就不管是要用哪個時區撈資料，都可以撈到正確的資料&lt;/p&gt;
+&lt;p&gt;所以 &lt;code&gt;2020-12-30 14:31:00+08:00&lt;/code&gt; 與 &lt;code&gt;2020-12-30 06:31:00+00:00&lt;/code&gt; 都可以撈取到相同的資料&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-php&#34; data-lang=&#34;php&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;// 時間設定
+&lt;/span&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;$time_start_at&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#39;2020-12-30 14:31:00+08:00&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;;&lt;/span&gt; &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;// 2020-12-30 06:31:00+00:00
+&lt;/span&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;$time_end_at&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#39;2021-01-01 14:31:00+08:00&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;;&lt;/span&gt;   &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;// 2021-01-01 06:31:00+00:00
+&lt;/span&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;// 轉換時間成 Carbon 物件
+&lt;/span&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;$TimeStartAtCarbon&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;Carbon&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;::&lt;/span&gt;&lt;span style=&#34;color:#c4a000&#34;&gt;parse&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;$time_start_at&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;);&lt;/span&gt;
+&lt;span style=&#34;color:#000&#34;&gt;$TimeEndAtCarbon&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;Carbon&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;::&lt;/span&gt;&lt;span style=&#34;color:#c4a000&#34;&gt;parse&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;$time_end_at&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;);&lt;/span&gt;
+
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;// 設定時間區間包含時區
+&lt;/span&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;// 2020-12-30 14:31:00+08:00
+&lt;/span&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;$time_start_at_timezone&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;$TimeStartAtCarbon&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;-&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#c4a000&#34;&gt;toDateTimeString&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;()&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;.&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;$TimeStartAtCarbon&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;-&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#c4a000&#34;&gt;getTimezone&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;()&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;-&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#c4a000&#34;&gt;toOffsetTimeZone&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;();&lt;/span&gt;
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;// 2020-01-01 14:31:00+08:00
+&lt;/span&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;$time_end_at_timezone&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;$TimeEndAtCarbon&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;-&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#c4a000&#34;&gt;toDateTimeString&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;()&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;.&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;$TimeEndAtCarbon&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;-&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#c4a000&#34;&gt;getTimezone&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;()&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;-&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#c4a000&#34;&gt;toOffsetTimeZone&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;();&lt;/span&gt;
+
+&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;// select * from &amp;#34;timezone_test&amp;#34; where &amp;#34;time_at_timezone&amp;#34; &amp;gt;= &amp;#39;2020-12-30 14:31:00+08:00&amp;#39; and &amp;#34;time_at_timezone&amp;#34; &amp;lt;= &amp;#39;2020-01-01 14:31:00+08:00&amp;#39;
+&lt;/span&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;$TimezoneTestCollection&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;TimezoneTest&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;::&lt;/span&gt;&lt;span style=&#34;color:#c4a000&#34;&gt;where&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#39;time_at_timezone&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#39;&amp;gt;=&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;$time_start_at_timezone&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;)&lt;/span&gt;
+    &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;-&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#c4a000&#34;&gt;where&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#39;time_at_timezone&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#39;&amp;lt;=&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;$time_end_at_timezone&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;)&lt;/span&gt;
+    &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;-&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#c4a000&#34;&gt;get&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;();&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;carbon-強制轉換時區&#34;&gt;Carbon 強制轉換時區&lt;/h2&gt;
+&lt;p&gt;在使用 Carbon 的 &lt;code&gt;setTimezone(&#39;UTC&#39;)&lt;/code&gt; 或 &lt;code&gt;utc()&lt;/code&gt; 將時間轉換成 UTC 時間，在 Linux 系統如果有改成 &lt;code&gt;Asia/Taipei&lt;/code&gt; 時轉換會出錯，無法正確的轉回去 &lt;code&gt;UTC&lt;/code&gt; 原本 +0 的時間&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-php&#34; data-lang=&#34;php&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;// 轉換成 UTC 時間
+&lt;/span&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;$CarbonTime&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;-&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#c4a000&#34;&gt;setTimezone&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#39;UTC&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;);&lt;/span&gt;
+&lt;span style=&#34;color:#000&#34;&gt;$CarbonTime&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;-&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#c4a000&#34;&gt;utc&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;();&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;所以在轉換的時候建議用 &lt;code&gt;setTimezone(&#39;GMT+0&#39;)&lt;/code&gt;，直接指定時區 + 多少，這樣出來的時間就會是對的&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-php&#34; data-lang=&#34;php&#34;&gt;&lt;span style=&#34;color:#000&#34;&gt;$CarbonTime&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;-&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#c4a000&#34;&gt;setTimezone&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#39;GMT+0&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;);&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;將-timestamp-時間的資料儲存至-timestamptz&#34;&gt;將 timestamp 時間的資料儲存至 timestampTz&lt;/h2&gt;
+&lt;p&gt;儲存到 timestamp 的資料皆不會包含時區資訊，時區必須由程式或系統判斷&lt;/p&gt;
+&lt;p&gt;所以將 &lt;code&gt;timestampTz&lt;/code&gt; 的 &lt;code&gt;2020-12-25 14:31:00+08:00&lt;/code&gt; 資料儲存至 &lt;code&gt;timestamp&lt;/code&gt;，僅會儲存 &lt;code&gt;2020-12-25 14:31:00&lt;/code&gt; 不包含時區資料，所以若程式或系統的時區是什麼，就會把時間視為是那個時區的時間&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;類型&lt;/th&gt;
+&lt;th&gt;儲存資料&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;timestampTz&lt;/td&gt;
+&lt;td&gt;2020-12-25 14:31:00+08:00&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;timestamp&lt;/td&gt;
+&lt;td&gt;2020-12-25 14:31:00&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2 id=&#34;timestamptz-優點&#34;&gt;timestampTz 優點&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;抓取資料可以使用指定時區的範圍去抓取
+&lt;ul&gt;
+&lt;li&gt;台北時間 2020-12-25 14:31:00+08:00&lt;/li&gt;
+&lt;li&gt;曼谷時間 2020-12-25 14:31:00+07:00&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;時間時區不需要特別綁定在程式系統上
+&lt;ul&gt;
+&lt;li&gt;使用沒有時區的 timestamp 時，在變更系統或程式的時區會是一個災難&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;顯示資料仍然可以顯示為對的時區資料&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;參考資料&#34;&gt;參考資料&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.postgresqltutorial.com/postgresql-timestamp/&#34;&gt;Understanding PostgreSQL Timestamp Data Types&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://docs.postgresql.tw/the-sql-language/data-types/date-time&#34;&gt;8.5. 日期時間型別 - PostgreSQL 正體中文使用手冊&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.epochconverter.com/timezones?iframe=true&amp;amp;width=100%25&amp;amp;height=100%25&#34;&gt;Time zone list / Epoch to time zone converter&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.php.net/manual/en/datetime.format.php&#34;&gt;PHP: DateTime::format - Manual&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://laracasts.com/discuss/channels/laravel/carbon-postgres-timestamp-with-timezone-and-dates&#34;&gt;Carbon, Postgres timestamp with timezone and Dates&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://stackoverflow.com/questions/52774094/laravel-whats-the-difference-between-timestamp-and-timestamptz&#34;&gt;Laravel - What&amp;rsquo;s the difference between timestamp() and timestampTz()? - Stack Overflow&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://carbon.nesbot.com/docs/#api-timezone&#34;&gt;Time zone list / Epoch to time zone converter&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://blog.wu-boy.com/2018/09/converting-timestamp-to-timestamp-in-a-specific-time-zone-in-postgres/&#34;&gt;Carbon - A simple PHP API extension for DateTime.&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
     
     <item>
       <title>Advanced: Docker 排程</title>
@@ -288,6 +450,19 @@
 &lt;li&gt;&lt;a href=&#34;https://codertw.com/%E5%89%8D%E7%AB%AF%E9%96%8B%E7%99%BC/50820/&#34;&gt;session、cookie與&amp;quot;記住我的登入狀態&amp;quot;的功能的實現 | 程式前沿&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
+      </description>
+    </item>
+    
+    <item>
+      <title>Advanced: 資料庫 Database</title>
+      <link>https://laravel-for-newbie.kejyun.com/zh/advanced/database/</link>
+      <pubDate>Fri, 20 Aug 2021 08:50:29 +0800</pubDate>
+      
+      <guid>https://laravel-for-newbie.kejyun.com/zh/advanced/database/</guid>
+      <description>
+        
+        
+        
       </description>
     </item>
     

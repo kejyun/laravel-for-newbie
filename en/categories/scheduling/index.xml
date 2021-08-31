@@ -16,20 +16,6 @@
     
     
     <item>
-      <title>Advanced: scheduling</title>
-      <link>https://laravel-for-newbie.kejyun.com/en/advanced/scheduling/</link>
-      <pubDate>Fri, 20 Aug 2021 08:50:29 +0800</pubDate>
-      
-      <guid>https://laravel-for-newbie.kejyun.com/en/advanced/scheduling/</guid>
-      <description>
-        
-        
-        &lt;h1 id=&#34;scheduling&#34;&gt;Scheduling&lt;/h1&gt;
-
-      </description>
-    </item>
-    
-    <item>
       <title>Advanced: Docker Scheduling</title>
       <link>https://laravel-for-newbie.kejyun.com/en/advanced/scheduling/docker/</link>
       <pubDate>Tue, 24 Aug 2021 08:50:29 +0800</pubDate>
@@ -96,6 +82,20 @@
 &lt;li&gt;&lt;a href=&#34;https://www.youtube.com/watch?v=2UTHJpBRGpY&#34;&gt;Task Scheduling - Laravel - The PHP Framework For Web Artisans&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://learnku.com/articles/7022/using-laravel-schedule-in-docker&#34;&gt;在 Docker 中使用 Laravel schedule | Laravel China 社区&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      <title>Advanced: scheduling</title>
+      <link>https://laravel-for-newbie.kejyun.com/en/advanced/scheduling/</link>
+      <pubDate>Fri, 20 Aug 2021 08:50:29 +0800</pubDate>
+      
+      <guid>https://laravel-for-newbie.kejyun.com/en/advanced/scheduling/</guid>
+      <description>
+        
+        
+        &lt;h1 id=&#34;scheduling&#34;&gt;Scheduling&lt;/h1&gt;
 
       </description>
     </item>
